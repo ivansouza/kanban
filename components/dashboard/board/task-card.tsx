@@ -58,8 +58,12 @@ export default function TaskCard({
 
   return (
     <motion.div
-      layout={animateLayout ? "position" : false}
-      transition={{ layout: { type: "spring", duration: 0.3, bounce: 0 } }}
+      layout="position"
+      transition={{
+        layout: animateLayout
+          ? { type: "spring", duration: 0.3, bounce: 0 }
+          : { duration: 0 },
+      }}
     >
       <div
         ref={setRef}

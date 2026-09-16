@@ -64,6 +64,16 @@
     0 2px 4px 0 rgb(35 35 35 / 0.03), 0 1px 2px 0 rgb(35 35 35 / 0.04),
     0 2px 12px 0 rgb(35 35 35 / 0.08), 0 6px 16px 0 rgb(35 35 35 / 0.12);
   --shadow-focus: 0 0 0 1px var(--info), 0 0 0 4px rgb(13 95 234 / 0.14);
+  --animate-card-lift: card-lift 200ms var(--ease-power3-out) both;
+  @keyframes card-lift {
+    from {
+      rotate: 0deg;
+      box-shadow:
+        0 2px 4px 0 rgb(35 35 35 / 0.03),
+        0 1px 2px 0 rgb(35 35 35 / 0.04),
+        0 0 0 3px rgb(205 205 205 / 0.12);
+    }
+  }
   --shadow-popover:
     0 0 0 1px var(--border), 0 4px 12px rgb(0 0 0 / 0.06),
     0 12px 32px rgb(0 0 0 / 0.08);

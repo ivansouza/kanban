@@ -2,6 +2,7 @@
 
 import { useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { useDroppable } from "@dnd-kit/core";
+import { motion } from "motion/react";
 import Button from "@/components/_ui/button";
 import Menu from "@/components/_ui/menu";
 import { Input } from "@/components/_ui/form";
@@ -129,7 +130,8 @@ export default function BoardColumn({
   };
 
   return (
-    <section
+    <motion.section
+      layoutScroll
       ref={setColumnRef}
       aria-label={column.name}
       className="scroll-thin border-border flex h-full w-[85vw] max-w-[340px] shrink-0 snap-start flex-col overflow-y-auto overscroll-y-contain border-r sm:w-[320px] lg:w-auto lg:max-w-none lg:min-w-[280px] lg:flex-1"
@@ -237,6 +239,6 @@ export default function BoardColumn({
         )}
       </div>
       <div ref={setTailRef} className="min-h-14 flex-1" />
-    </section>
+    </motion.section>
   );
 }

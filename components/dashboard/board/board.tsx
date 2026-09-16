@@ -68,6 +68,7 @@ export default function Board({ mine = false }: { mine?: boolean }) {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [placement, setPlacement] = useState<Placement | null>(null);
   const [settledId, setSettledId] = useState<string | null>(null);
+  const [dragCount, setDragCount] = useState(0);
   const placementRef = useRef<Placement | null>(null);
   const mounted = useMounted();
 
@@ -121,6 +122,7 @@ export default function Board({ mine = false }: { mine?: boolean }) {
 
   const onDragStart = ({ active }: DragStartEvent) => {
     setActiveId(String(active.id));
+    setDragCount((count) => count + 1);
     updatePlacement(null);
   };
 
@@ -226,7 +228,10 @@ export default function Board({ mine = false }: { mine?: boolean }) {
       }}
     >
       <div className="relative flex min-h-0 flex-1">
-        <div className="scroll-thin flex min-h-0 flex-1 snap-x snap-mandatory overflow-x-auto overflow-y-hidden lg:snap-none">
+        <motion.div
+          layoutScroll
+          className="scroll-thin flex min-h-0 flex-1 snap-x snap-mandatory overflow-x-auto overflow-y-hidden lg:snap-none"
+        >
           {visibleColumns.map((column) => (
             <BoardColumn
               key={column.id}
@@ -250,7 +255,7 @@ export default function Board({ mine = false }: { mine?: boolean }) {
               </p>
             </div>
           )}
-        </div>
+        </motion.div>
         {nothingVisible && (
           <div className="pointer-events-none absolute inset-x-0 top-1/2 flex -translate-y-1/2 flex-col items-center gap-3 px-8 text-center">
             <div className="shadow-card pointer-events-auto flex flex-col items-center gap-3 rounded-2xl bg-white p-6">
@@ -310,6 +315,7 @@ export default function Board({ mine = false }: { mine?: boolean }) {
           <DragOverlay dropAnimation={null} zIndex={80}>
             {activeTask && activeColumn && (
               <TaskCardView
+                key={`${activeTask.id}-${dragCount}`}
                 task={activeTask}
                 column={activeColumn}
                 members={members}
