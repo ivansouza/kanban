@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 
-export const SITE_NAME = "Site Name";
+export const SITE_NAME = "Kanbaaan";
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://example.com";
-export const SITE_DESCRIPTION = "One sentence describing the site.";
+export const SITE_DESCRIPTION =
+  "A kanban board for tracking issues across your team, with drag and drop, filters and due dates.";
 export const DEFAULT_OG_IMAGE = "/opengraph-image.jpg";
 
 export function absoluteUrl(path: string) {
@@ -28,7 +29,7 @@ export type SiteRoute = {
 export const SITE_ROUTES: SiteRoute[] = [
   {
     path: "/",
-    title: "Home",
+    title: "Task Progress & Workflow Dashboard",
     description: SITE_DESCRIPTION,
     changeFrequency: "weekly",
     priority: 1,
