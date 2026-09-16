@@ -31,6 +31,7 @@ function HiddenColumnRow({ column, count }: { column: Column; count: number }) {
   return (
     <div
       ref={setNodeRef}
+      data-hidden-column={column.id}
       className={cn(
         "-mx-2 rounded-lg transition-colors duration-150",
         isOver && "bg-info/[0.08]",

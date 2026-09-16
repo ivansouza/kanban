@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import {
   DndContext,
@@ -29,9 +29,20 @@ import {
 import Button from "@/components/_ui/button";
 import { useKanbanStore } from "@/stores/kanban-store";
 import { isFilterActive, useUiStore } from "@/stores/ui-store";
+import { useMobileBreakpoints } from "@/hooks/use-mobile-breakpoints";
 import type { Task } from "@/lib/kanban";
 import { ease } from "@/lib/easings";
+import { cn } from "@/lib/utils";
 import { useMounted } from "@/hooks/use-mounted";
+
+type Point = { x: number; y: number };
+type EdgeDirection = -1 | 0 | 1;
+
+const EDGE_DWELL = 220;
+const EDGE_ZONE_MAX = 64;
+const EDGE_ZONE_RATIO = 0.16;
+const LOCK_RADIUS = 28;
+const REALIGN_DURATION = 400;
 
 const collisionDetection: CollisionDetection = (args) => {
   const within = pointerWithin(args);
@@ -49,6 +60,20 @@ const collisionDetection: CollisionDetection = (args) => {
   return rectIntersection(args);
 };
 
+function eventPoint(event: Event | null): Point | null {
+  if (!event) return null;
+  if ("touches" in event) {
+    const touch = event as TouchEvent;
+    const point = touch.touches[0] ?? touch.changedTouches[0];
+    return point ? { x: point.clientX, y: point.clientY } : null;
+  }
+  if ("clientX" in event) {
+    const mouse = event as MouseEvent;
+    return { x: mouse.clientX, y: mouse.clientY };
+  }
+  return null;
+}
+
 export default function Board({ mine = false }: { mine?: boolean }) {
   const columns = useKanbanStore((state) => state.columns);
   const tasks = useKanbanStore((state) => state.tasks);
@@ -64,12 +89,23 @@ export default function Board({ mine = false }: { mine?: boolean }) {
   const panelSheetOpen = useUiStore((state) => state.panelSheetOpen);
   const setPanelSheetOpen = useUiStore((state) => state.setPanelSheetOpen);
   const toast = useUiStore((state) => state.toast);
+  const { belowLg } = useMobileBreakpoints();
 
   const [activeId, setActiveId] = useState<string | null>(null);
   const [placement, setPlacement] = useState<Placement | null>(null);
   const [settledId, setSettledId] = useState<string | null>(null);
   const [dragCount, setDragCount] = useState(0);
+  const [edgeDir, setEdgeDir] = useState<EdgeDirection>(0);
+  const [snapping, setSnapping] = useState(true);
   const placementRef = useRef<Placement | null>(null);
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const pointerRef = useRef<Point | null>(null);
+  const edgeRef = useRef<{ dir: EdgeDirection; timer: number | null }>({
+    dir: 0,
+    timer: null,
+  });
+  const lockRef = useRef<{ columnId: string; at: Point } | null>(null);
+  const snapTimerRef = useRef<number | null>(null);
   const mounted = useMounted();
 
   const sensors = useSensors(
@@ -77,6 +113,38 @@ export default function Board({ mine = false }: { mine?: boolean }) {
     useSensor(TouchSensor, {
       activationConstraint: { delay: 220, tolerance: 8 },
     }),
+  );
+
+  useEffect(() => {
+    const onPointerMove = (event: PointerEvent) => {
+      pointerRef.current = { x: event.clientX, y: event.clientY };
+    };
+    const onTouchMove = (event: TouchEvent) => {
+      const point = eventPoint(event);
+      if (point) pointerRef.current = point;
+    };
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: true });
+    return () => {
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("touchmove", onTouchMove);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!activeId) return;
+    document.body.classList.add("cursor-grabbing", "select-none");
+    return () => {
+      document.body.classList.remove("cursor-grabbing", "select-none");
+    };
+  }, [activeId]);
+
+  useEffect(
+    () => () => {
+      if (edgeRef.current.timer) window.clearTimeout(edgeRef.current.timer);
+      if (snapTimerRef.current) window.clearTimeout(snapTimerRef.current);
+    },
+    [],
   );
 
   const visibleTasks = useMemo(
@@ -120,25 +188,121 @@ export default function Board({ mine = false }: { mine?: boolean }) {
     setPlacement(next);
   }, []);
 
-  const onDragStart = ({ active }: DragStartEvent) => {
+  const columnOffsets = () => {
+    const scroller = scrollerRef.current;
+    if (!scroller) return [];
+    const base = scroller.getBoundingClientRect().left - scroller.scrollLeft;
+    return Array.from(
+      scroller.querySelectorAll<HTMLElement>("[data-column-id]"),
+    ).map((element) => ({
+      id: element.dataset.columnId as string,
+      left: element.getBoundingClientRect().left - base,
+    }));
+  };
+
+  const nearestColumn = (
+    offsets: { id: string; left: number }[],
+    left: number,
+  ) =>
+    offsets.reduce(
+      (best, item, index) =>
+        Math.abs(item.left - left) < Math.abs(offsets[best].left - left)
+          ? index
+          : best,
+      0,
+    );
+
+  const pageBoard = (dir: EdgeDirection) => {
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+    const offsets = columnOffsets();
+    if (offsets.length === 0) return;
+    const current = nearestColumn(offsets, scroller.scrollLeft);
+    const target =
+      offsets[Math.min(offsets.length - 1, Math.max(0, current + dir))];
+    if (!target || Math.abs(target.left - scroller.scrollLeft) < 1) return;
+    scroller.scrollTo({ left: target.left, behavior: "smooth" });
+    const pointer = pointerRef.current;
+    lockRef.current = pointer ? { columnId: target.id, at: pointer } : null;
+  };
+
+  const clearEdge = () => {
+    if (edgeRef.current.timer) window.clearTimeout(edgeRef.current.timer);
+    edgeRef.current = { dir: 0, timer: null };
+    setEdgeDir((dir) => (dir === 0 ? dir : 0));
+  };
+
+  const armEdge = (dir: EdgeDirection) => {
+    if (edgeRef.current.dir === dir) return;
+    if (edgeRef.current.timer) window.clearTimeout(edgeRef.current.timer);
+    edgeRef.current = {
+      dir,
+      timer: window.setTimeout(() => {
+        edgeRef.current.timer = null;
+        pageBoard(dir);
+      }, EDGE_DWELL),
+    };
+    setEdgeDir(dir);
+  };
+
+  const updateEdge = (pointer: Point, hit: Element | null) => {
+    const scroller = scrollerRef.current;
+    if (
+      !scroller ||
+      !hit ||
+      !scroller.contains(hit) ||
+      scroller.scrollWidth <= scroller.clientWidth + 1
+    ) {
+      clearEdge();
+      return;
+    }
+    const rect = scroller.getBoundingClientRect();
+    const zone = Math.min(EDGE_ZONE_MAX, rect.width * EDGE_ZONE_RATIO);
+    const canRight =
+      scroller.scrollLeft + scroller.clientWidth < scroller.scrollWidth - 1;
+    const canLeft = scroller.scrollLeft > 1;
+    if (canRight && pointer.x >= rect.right - zone) armEdge(1);
+    else if (canLeft && pointer.x <= rect.left + zone) armEdge(-1);
+    else clearEdge();
+  };
+
+  const realignColumns = () => {
+    const scroller = scrollerRef.current;
+    if (snapTimerRef.current) window.clearTimeout(snapTimerRef.current);
+    if (!scroller || !belowLg) {
+      setSnapping(true);
+      return;
+    }
+    const offsets = columnOffsets();
+    if (offsets.length === 0) {
+      setSnapping(true);
+      return;
+    }
+    const target = offsets[nearestColumn(offsets, scroller.scrollLeft)];
+    if (Math.abs(target.left - scroller.scrollLeft) < 1) {
+      setSnapping(true);
+      return;
+    }
+    scroller.scrollTo({ left: target.left, behavior: "smooth" });
+    snapTimerRef.current = window.setTimeout(() => {
+      snapTimerRef.current = null;
+      setSnapping(true);
+    }, REALIGN_DURATION);
+  };
+
+  const onDragStart = ({ active, activatorEvent }: DragStartEvent) => {
+    if (snapTimerRef.current) window.clearTimeout(snapTimerRef.current);
+    pointerRef.current = eventPoint(activatorEvent);
+    lockRef.current = null;
+    setSnapping(false);
     setActiveId(String(active.id));
     setDragCount((count) => count + 1);
     updatePlacement(null);
   };
 
   const pointerFrom = (event: DragMoveEvent) => {
-    const activator = event.activatorEvent as MouseEvent | TouchEvent | null;
-    const touch =
-      activator && "touches" in activator
-        ? (activator.touches[0] ?? activator.changedTouches[0])
-        : null;
-    const originX = touch
-      ? touch.clientX
-      : ((activator as MouseEvent | null)?.clientX ?? 0);
-    const originY = touch
-      ? touch.clientY
-      : ((activator as MouseEvent | null)?.clientY ?? 0);
-    return { x: originX + event.delta.x, y: originY + event.delta.y };
+    const origin = eventPoint(event.activatorEvent) ?? { x: 0, y: 0 };
+    return { x: origin.x + event.delta.x, y: origin.y + event.delta.y };
   };
 
   const samePlacement = (a: Placement | null, b: Placement | null) =>
@@ -149,58 +313,70 @@ export default function Board({ mine = false }: { mine?: boolean }) {
       a.index === b.index &&
       a.hidden === b.hidden);
 
-  const onDragMove = (event: DragMoveEvent) => {
-    const { active, over } = event;
-    if (!over) {
-      if (placementRef.current !== null) updatePlacement(null);
-      return;
-    }
-    const data = over.data.current as DropData | undefined;
-    if (!data) return;
-    const id = String(active.id);
-    let next: Placement | null;
-    if (data.type === "hidden") {
-      next = {
-        columnId: data.columnId,
+  const computePlacement = (pointer: Point, id: string): Placement | null => {
+    const hit = document.elementFromPoint(pointer.x, pointer.y);
+    updateEdge(pointer, hit);
+    const hiddenRow = hit?.closest<HTMLElement>("[data-hidden-column]");
+    if (hiddenRow?.dataset.hiddenColumn) {
+      lockRef.current = null;
+      return {
+        columnId: hiddenRow.dataset.hiddenColumn,
         index: Number.MAX_SAFE_INTEGER,
         beforeId: null,
         hidden: true,
       };
-    } else {
-      const columnId =
-        data.type === "slot" ? placementRef.current?.columnId : data.columnId;
-      if (!columnId) return;
-      const pointer = pointerFrom(event);
-      const cards = Array.from(
-        document.querySelectorAll<HTMLElement>(
-          `[data-column-id="${columnId}"] [data-task-card]`,
-        ),
-      ).filter((card) => card.dataset.taskCard !== id);
-      let index = 0;
-      for (const card of cards) {
-        const rect = card.getBoundingClientRect();
-        if (pointer.y > rect.top + rect.height / 2) index += 1;
-        else break;
-      }
-      next = {
-        columnId,
-        index,
-        beforeId: cards[index]?.dataset.taskCard ?? null,
-        hidden: false,
-      };
     }
+    const lock = lockRef.current;
+    if (
+      lock &&
+      Math.hypot(pointer.x - lock.at.x, pointer.y - lock.at.y) > LOCK_RADIUS
+    ) {
+      lockRef.current = null;
+    }
+    const columnId =
+      lockRef.current?.columnId ??
+      hit?.closest<HTMLElement>("[data-column-id]")?.dataset.columnId;
+    if (!columnId) return null;
+    const cards = Array.from(
+      document.querySelectorAll<HTMLElement>(
+        `[data-column-id="${columnId}"] [data-task-card]`,
+      ),
+    ).filter((card) => card.dataset.taskCard !== id);
+    let index = 0;
+    for (const card of cards) {
+      const rect = card.getBoundingClientRect();
+      if (pointer.y > rect.top + rect.height / 2) index += 1;
+      else break;
+    }
+    return {
+      columnId,
+      index,
+      beforeId: cards[index]?.dataset.taskCard ?? null,
+      hidden: false,
+    };
+  };
+
+  const onDragMove = (event: DragMoveEvent) => {
+    const pointer = pointerRef.current ?? pointerFrom(event);
+    const next = computePlacement(pointer, String(event.active.id));
     if (!samePlacement(placementRef.current, next)) updatePlacement(next);
   };
 
   const finish = () => {
     markDragEnd();
+    clearEdge();
+    lockRef.current = null;
     setActiveId(null);
     updatePlacement(null);
+    realignColumns();
   };
 
   const onDragEnd = ({ active }: DragEndEvent) => {
-    const target = placementRef.current;
     const id = String(active.id);
+    const pointer = pointerRef.current;
+    const target = pointer
+      ? computePlacement(pointer, id)
+      : placementRef.current;
     const task = tasks.find((item) => item.id === id);
     if (task && target) {
       setSettledId(id);
@@ -220,6 +396,7 @@ export default function Board({ mine = false }: { mine?: boolean }) {
     <DndContext
       sensors={sensors}
       collisionDetection={collisionDetection}
+      autoScroll={{ threshold: { x: 0, y: 0.2 } }}
       onDragStart={onDragStart}
       onDragMove={onDragMove}
       onDragEnd={onDragEnd}
@@ -227,14 +404,18 @@ export default function Board({ mine = false }: { mine?: boolean }) {
       accessibility={{
         screenReaderInstructions: {
           draggable:
-            "Press Enter to open the issue. Drag it with a pointer to move it to another column.",
+            "Press Enter to open the issue. Drag it with a pointer to move it to another column. Hold it at the edge of the board to slide to the next column.",
         },
       }}
     >
       <div className="relative flex min-h-0 flex-1">
         <motion.div
+          ref={scrollerRef}
           layoutScroll
-          className="scroll-thin flex min-h-0 flex-1 snap-x snap-mandatory overflow-x-auto overflow-y-hidden lg:snap-none"
+          className={cn(
+            "scroll-thin flex min-h-0 flex-1 snap-x snap-mandatory overflow-x-auto overflow-y-hidden lg:snap-none",
+            !snapping && "snap-none",
+          )}
         >
           {visibleColumns.map((column) => (
             <BoardColumn
@@ -260,6 +441,20 @@ export default function Board({ mine = false }: { mine?: boolean }) {
             </div>
           )}
         </motion.div>
+        <div
+          aria-hidden
+          className={cn(
+            "from-info/15 pointer-events-none absolute inset-y-0 left-0 z-20 w-16 bg-linear-to-r to-transparent transition-opacity duration-150 lg:hidden",
+            edgeDir === -1 ? "opacity-100" : "opacity-0",
+          )}
+        />
+        <div
+          aria-hidden
+          className={cn(
+            "from-info/15 pointer-events-none absolute inset-y-0 right-0 z-20 w-16 bg-linear-to-l to-transparent transition-opacity duration-150 lg:hidden",
+            edgeDir === 1 ? "opacity-100" : "opacity-0",
+          )}
+        />
         {nothingVisible && (
           <div className="pointer-events-none absolute inset-x-0 top-1/2 flex -translate-y-1/2 flex-col items-center gap-3 px-8 text-center">
             <div className="shadow-card pointer-events-auto flex flex-col items-center gap-3 rounded-2xl bg-white p-6">
@@ -316,7 +511,11 @@ export default function Board({ mine = false }: { mine?: boolean }) {
       </AnimatePresence>
       {mounted &&
         createPortal(
-          <DragOverlay dropAnimation={null} zIndex={80}>
+          <DragOverlay
+            dropAnimation={null}
+            zIndex={80}
+            className="pointer-events-none"
+          >
             {activeTask && activeColumn && (
               <TaskCardView
                 key={`${activeTask.id}-${dragCount}`}
@@ -326,7 +525,7 @@ export default function Board({ mine = false }: { mine?: boolean }) {
                 teamName={teamName}
                 display={display}
                 lifted
-                className="cursor-grabbing"
+                className="pointer-events-none"
               />
             )}
           </DragOverlay>,
