@@ -113,7 +113,6 @@ export default function BoardColumn({
         members={members}
         teamName={teamName}
         display={display}
-        isFirst={visibleIndex === 0 && slotIndex !== 0}
         animateLayout={task.id !== settledId}
       />,
     );

@@ -15,7 +15,6 @@ const tips = [
   "Drag a card to reorder it or move it to another column.",
   "Drop a card on a hidden column to move it off the board.",
   "Click a priority, assignee or date chip to change it in place.",
-  "Hover a card and use the arrow button to move it to the top.",
 ];
 
 export default function HelpDialog({ open }: { open: boolean }) {

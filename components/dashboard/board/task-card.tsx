@@ -7,13 +7,12 @@ import TaskCardView, {
   type TaskCardViewProps,
 } from "@/components/dashboard/board/task-card-view";
 import { wasJustDragged } from "@/components/dashboard/board/board-drag";
-import { useKanbanStore } from "@/stores/kanban-store";
 import { useUiStore } from "@/stores/ui-store";
 import { cn } from "@/lib/utils";
 
 type TaskCardProps = Omit<
   TaskCardViewProps,
-  "interactive" | "lifted" | "onMoveToTop" | "className"
+  "interactive" | "lifted" | "className"
 > & { hidden?: boolean; animateLayout?: boolean };
 
 export default function TaskCard({
@@ -23,7 +22,6 @@ export default function TaskCard({
 }: TaskCardProps) {
   const { task } = view;
   const openDialog = useUiStore((state) => state.openDialog);
-  const moveToTop = useKanbanStore((state) => state.moveToTop);
   const {
     attributes,
     listeners,
@@ -82,7 +80,6 @@ export default function TaskCard({
           {...view}
           interactive
           invisible={hidden}
-          onMoveToTop={() => moveToTop(task.id)}
           className="ease-power2-out hover:shadow-card-hover transition-shadow duration-150"
         />
       </div>

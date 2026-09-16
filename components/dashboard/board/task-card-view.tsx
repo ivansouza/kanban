@@ -1,13 +1,11 @@
 "use client";
 
-import Button from "@/components/_ui/button";
 import TaskChips from "@/components/dashboard/board/task-chips";
 import { COLUMN_META } from "@/components/_common/column-meta";
 import type { Display } from "@/stores/ui-store";
 import { crewLabel, type Column, type Member, type Task } from "@/lib/kanban";
 import { formatShort } from "@/lib/dates";
 import { cn } from "@/lib/utils";
-import ArrowUpIcon from "@/public/assets/images/_common/icons/arrow-narrow-up.svg";
 
 export type TaskCardViewProps = {
   task: Task;
@@ -18,8 +16,6 @@ export type TaskCardViewProps = {
   interactive?: boolean;
   lifted?: boolean;
   invisible?: boolean;
-  isFirst?: boolean;
-  onMoveToTop?: () => void;
   className?: string;
 };
 
@@ -32,13 +28,10 @@ export default function TaskCardView({
   interactive = false,
   lifted = false,
   invisible = false,
-  isFirst = false,
-  onMoveToTop,
   className,
 }: TaskCardViewProps) {
   const meta = COLUMN_META[column.kind];
   const Icon = meta.icon;
-  const showTop = interactive && Boolean(onMoveToTop) && !isFirst;
   const showFooter = display.priority || display.assignees || display.due;
 
   return (
@@ -51,7 +44,7 @@ export default function TaskCardView({
         className,
       )}
     >
-      <div className={cn("flex flex-col gap-2 p-4", showTop && "pr-12")}>
+      <div className="flex flex-col gap-2 p-4">
         <div className="flex items-start gap-1.5">
           <Icon
             aria-hidden
@@ -86,23 +79,6 @@ export default function TaskCardView({
             interactive={interactive}
           />
         </div>
-      )}
-      {showTop && (
-        <Button
-          variant="primary"
-          size="icon"
-          aria-label="Move to top"
-          title="Move to top"
-          onMouseDown={(event) => event.stopPropagation()}
-          onTouchStart={(event) => event.stopPropagation()}
-          onClick={(event) => {
-            event.stopPropagation();
-            onMoveToTop?.();
-          }}
-          className="absolute top-3 right-3 opacity-0 transition-opacity duration-150 group-hover/card:opacity-100 focus-visible:opacity-100"
-        >
-          <ArrowUpIcon className="size-3.5" aria-hidden />
-        </Button>
       )}
     </div>
   );

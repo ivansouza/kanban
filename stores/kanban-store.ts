@@ -30,7 +30,6 @@ type KanbanState = BoardData & {
   updateTask: (id: string, patch: Partial<Omit<Task, "id">>) => void;
   deleteTask: (id: string) => void;
   moveTask: (id: string, columnId: string, beforeId: string | null) => void;
-  moveToTop: (id: string) => void;
   sortColumn: (columnId: string, by: "priority" | "due") => void;
   renameColumn: (id: string, name: string) => void;
   setColumnHidden: (id: string, hidden: boolean) => void;
@@ -187,22 +186,6 @@ export const useKanbanStore = create<KanbanState>()(
             activity: withActivity(
               state.activity,
               `You moved “${task.title}” to ${column?.name ?? columnId}`,
-            ),
-          };
-        }),
-      moveToTop: (id) =>
-        set((state) => {
-          const task = state.tasks.find((item) => item.id === id);
-          if (!task) return state;
-          const first = state.tasks.find(
-            (item) => item.columnId === task.columnId && item.id !== id,
-          );
-          return {
-            tasks: insertAt(
-              state.tasks,
-              task,
-              task.columnId,
-              first?.id ?? null,
             ),
           };
         }),
