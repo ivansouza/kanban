@@ -3,8 +3,11 @@
 import { useRef, useState } from "react";
 import Button from "@/components/_ui/button";
 import Menu, { type MenuItem } from "@/components/_ui/menu";
+import Sheet from "@/components/_ui/sheet";
+import ToolbarFilterSheet from "@/components/dashboard/toolbar/toolbar-filter-sheet";
 import { useKanbanStore } from "@/stores/kanban-store";
 import { isFilterActive, useUiStore } from "@/stores/ui-store";
+import { useMobileBreakpoints } from "@/hooks/use-mobile-breakpoints";
 import { PRIORITIES } from "@/lib/kanban";
 import { PRIORITY_COLOR } from "@/components/_common/column-meta";
 import FilterIcon from "@/public/assets/images/_common/icons/filter-lines.svg";
@@ -19,6 +22,7 @@ export default function ToolbarFilter() {
   const setFilter = useUiStore((state) => state.setFilter);
   const clearFilter = useUiStore((state) => state.clearFilter);
   const members = useKanbanStore((state) => state.members);
+  const { belowSm } = useMobileBreakpoints();
   const active = isFilterActive(filter);
 
   const items: MenuItem[] = [
@@ -84,15 +88,45 @@ export default function ToolbarFilter() {
           />
         )}
       </Button>
-      <Menu
-        open={open}
-        onClose={() => setOpen(false)}
-        anchorRef={anchorRef}
-        align="end"
-        label="Filter issues"
-        items={items}
-        className="w-[220px]"
-      />
+      {belowSm ? (
+        <Sheet
+          open={open}
+          onClose={() => setOpen(false)}
+          title="Filter and display"
+          footer={
+            <>
+              <Button
+                variant="ghost"
+                size="lg"
+                disabled={!active}
+                onClick={clearFilter}
+                className="mr-auto"
+              >
+                Clear filters
+              </Button>
+              <Button
+                variant="primary"
+                size="lg"
+                onClick={() => setOpen(false)}
+              >
+                Done
+              </Button>
+            </>
+          }
+        >
+          <ToolbarFilterSheet />
+        </Sheet>
+      ) : (
+        <Menu
+          open={open}
+          onClose={() => setOpen(false)}
+          anchorRef={anchorRef}
+          align="end"
+          label="Filter issues"
+          items={items}
+          className="w-[220px]"
+        />
+      )}
     </>
   );
 }

@@ -177,6 +177,7 @@ export default function Header() {
           size="icon"
           aria-label="Copy link"
           onClick={copyLink}
+          className="hidden sm:inline-flex"
         >
           <LinkIcon className="size-3.5" aria-hidden />
         </Button>

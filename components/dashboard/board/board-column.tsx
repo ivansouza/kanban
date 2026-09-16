@@ -137,9 +137,9 @@ export default function BoardColumn({
       ref={setColumnRef}
       data-column-id={column.id}
       aria-label={column.name}
-      className="scroll-thin border-border flex h-full w-[85vw] max-w-[340px] shrink-0 snap-start flex-col overflow-y-auto overscroll-y-contain border-r sm:w-[320px] lg:w-auto lg:max-w-none lg:min-w-[280px] lg:flex-1"
+      className="scroll-thin border-border flex h-full w-[85vw] max-w-[340px] shrink-0 snap-start flex-col overflow-y-auto overscroll-y-contain border-r border-b sm:w-[320px] lg:w-auto lg:max-w-none lg:min-w-[280px] lg:flex-1"
     >
-      <header className="sticky top-0 z-10 flex items-center justify-between gap-2 bg-white px-4 pt-4 pb-3">
+      <header className="sticky top-0 z-10 flex items-center justify-between gap-2 bg-[linear-gradient(to_bottom,var(--background)_calc(100%-20px),transparent)] px-4 pt-4 pb-5">
         <div className="flex min-w-0 flex-1 items-center gap-2">
           <StatusBadge icon={meta.icon} tone={meta.tone} />
           {renaming ? (
@@ -219,7 +219,7 @@ export default function BoardColumn({
           },
         ]}
       />
-      <div className="flex flex-col gap-3.5 px-4 pt-2">
+      <div className="flex flex-col gap-3.5 px-4">
         {composing && (
           <NewTaskComposer
             columnId={column.id}

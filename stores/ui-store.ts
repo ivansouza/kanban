@@ -34,6 +34,13 @@ export type Display = {
   due: boolean;
 };
 
+export const DISPLAY_OPTIONS: { key: keyof Display; label: string }[] = [
+  { key: "created", label: "Created date" },
+  { key: "priority", label: "Priority" },
+  { key: "assignees", label: "Assignees" },
+  { key: "due", label: "Due date" },
+];
+
 export type Toast = { id: number; title: string };
 
 type UiState = {

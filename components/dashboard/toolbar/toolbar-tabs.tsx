@@ -20,7 +20,7 @@ export default function ToolbarTabs() {
     <div
       role="tablist"
       aria-label="Views"
-      className="bg-muted flex rounded-[10px]"
+      className="bg-muted flex min-w-0 flex-1 rounded-[10px] sm:flex-none"
     >
       {tabs.map((item) => {
         const active = item.id === tab;
@@ -33,7 +33,7 @@ export default function ToolbarTabs() {
             size="md"
             onClick={() => setTab(item.id)}
             className={cn(
-              "relative rounded-[10px] px-2 hover:bg-transparent",
+              "relative flex-1 rounded-[10px] px-2 hover:bg-transparent sm:flex-none",
               active ? "text-foreground" : "text-muted-foreground",
             )}
           >
