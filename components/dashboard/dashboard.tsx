@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { MotionConfig } from "motion/react";
 import Sidebar from "@/components/dashboard/sidebar/sidebar";
 import Header from "@/components/dashboard/header/header";
 import Main from "@/components/dashboard/main/main";
@@ -47,14 +48,16 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <div className="bg-background flex h-dvh w-full overflow-hidden">
-      <Sidebar />
-      <div className="flex min-w-0 flex-1 flex-col">
-        <Header />
-        <Main />
+    <MotionConfig reducedMotion="user">
+      <div className="bg-background flex h-dvh w-full overflow-hidden">
+        <Sidebar />
+        <div className="flex min-w-0 flex-1 flex-col">
+          <Header />
+          <Main />
+        </div>
+        <Dialogs />
+        <Toaster />
       </div>
-      <Dialogs />
-      <Toaster />
-    </div>
+    </MotionConfig>
   );
 }

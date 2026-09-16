@@ -27,6 +27,7 @@ type BoardColumnProps = {
   activeId: string | null;
   activeTask: Task | null;
   placement: Placement | null;
+  settledId: string | null;
 };
 
 export default function BoardColumn({
@@ -38,6 +39,7 @@ export default function BoardColumn({
   activeId,
   activeTask,
   placement,
+  settledId,
 }: BoardColumnProps) {
   const { setNodeRef: setColumnRef } = useDroppable({
     id: `column:${column.id}`,
@@ -108,6 +110,7 @@ export default function BoardColumn({
         teamName={teamName}
         display={display}
         isFirst={visibleIndex === 0 && originIndex !== 0}
+        animateLayout={task.id !== settledId}
       />,
     );
     visibleIndex += 1;
@@ -131,7 +134,7 @@ export default function BoardColumn({
       aria-label={column.name}
       className="scroll-thin border-border flex h-full w-[85vw] max-w-[340px] shrink-0 snap-start flex-col overflow-y-auto overscroll-y-contain border-r sm:w-[320px] lg:w-auto lg:max-w-none lg:min-w-[280px] lg:flex-1"
     >
-      <header className="sticky top-0 z-10 flex items-center justify-between gap-2 bg-white px-4 pt-4 pb-5">
+      <header className="sticky top-0 z-10 flex items-center justify-between gap-2 bg-white px-4 pt-4 pb-3">
         <div className="flex min-w-0 flex-1 items-center gap-2">
           <StatusBadge icon={meta.icon} tone={meta.tone} />
           {renaming ? (
@@ -211,7 +214,7 @@ export default function BoardColumn({
           },
         ]}
       />
-      <div className="flex flex-col gap-3.5 px-4">
+      <div className="flex flex-col gap-3.5 px-4 pt-2">
         {composing && (
           <NewTaskComposer
             columnId={column.id}

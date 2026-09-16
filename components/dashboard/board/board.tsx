@@ -67,6 +67,7 @@ export default function Board({ mine = false }: { mine?: boolean }) {
 
   const [activeId, setActiveId] = useState<string | null>(null);
   const [placement, setPlacement] = useState<Placement | null>(null);
+  const [settledId, setSettledId] = useState<string | null>(null);
   const placementRef = useRef<Placement | null>(null);
   const mounted = useMounted();
 
@@ -196,6 +197,8 @@ export default function Board({ mine = false }: { mine?: boolean }) {
     const id = String(active.id);
     const task = tasks.find((item) => item.id === id);
     if (task && target) {
+      setSettledId(id);
+      window.setTimeout(() => setSettledId(null), 150);
       moveTask(id, target.columnId, target.beforeId);
       if (target.hidden) {
         const column = columns.find((item) => item.id === target.columnId);
@@ -235,6 +238,7 @@ export default function Board({ mine = false }: { mine?: boolean }) {
               activeId={activeId}
               activeTask={activeTask}
               placement={placement}
+              settledId={settledId}
             />
           ))}
           {visibleColumns.length === 0 && (

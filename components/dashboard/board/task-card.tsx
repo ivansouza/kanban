@@ -2,6 +2,7 @@
 
 import { useCallback, type KeyboardEvent } from "react";
 import { useDraggable, useDroppable } from "@dnd-kit/core";
+import { motion } from "motion/react";
 import TaskCardView, {
   type TaskCardViewProps,
 } from "@/components/dashboard/board/task-card-view";
@@ -13,9 +14,13 @@ import { cn } from "@/lib/utils";
 type TaskCardProps = Omit<
   TaskCardViewProps,
   "interactive" | "lifted" | "onMoveToTop" | "className"
-> & { hidden?: boolean };
+> & { hidden?: boolean; animateLayout?: boolean };
 
-export default function TaskCard({ hidden = false, ...view }: TaskCardProps) {
+export default function TaskCard({
+  hidden = false,
+  animateLayout = true,
+  ...view
+}: TaskCardProps) {
   const { task } = view;
   const openDialog = useUiStore((state) => state.openDialog);
   const moveToTop = useKanbanStore((state) => state.moveToTop);
@@ -52,25 +57,30 @@ export default function TaskCard({ hidden = false, ...view }: TaskCardProps) {
   };
 
   return (
-    <div
-      ref={setRef}
-      {...listeners}
-      {...attributes}
-      aria-label={`Open ${task.title}`}
-      onClick={open}
-      onKeyDown={onKeyDown}
-      className={cn(
-        "focus-visible:shadow-focus cursor-grab touch-manipulation rounded-2xl outline-none",
-        isDragging && "cursor-grabbing",
-      )}
+    <motion.div
+      layout={animateLayout ? "position" : false}
+      transition={{ layout: { type: "spring", duration: 0.3, bounce: 0 } }}
     >
-      <TaskCardView
-        {...view}
-        interactive
-        invisible={hidden}
-        onMoveToTop={() => moveToTop(task.id)}
-        className="ease-power2-out hover:shadow-card-hover transition-shadow duration-150"
-      />
-    </div>
+      <div
+        ref={setRef}
+        {...listeners}
+        {...attributes}
+        aria-label={`Open ${task.title}`}
+        onClick={open}
+        onKeyDown={onKeyDown}
+        className={cn(
+          "focus-visible:shadow-focus cursor-grab touch-manipulation rounded-2xl outline-none",
+          isDragging && "cursor-grabbing",
+        )}
+      >
+        <TaskCardView
+          {...view}
+          interactive
+          invisible={hidden}
+          onMoveToTop={() => moveToTop(task.id)}
+          className="ease-power2-out hover:shadow-card-hover transition-shadow duration-150"
+        />
+      </div>
+    </motion.div>
   );
 }

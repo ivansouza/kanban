@@ -1,6 +1,7 @@
 "use client";
 
 import { useDroppable } from "@dnd-kit/core";
+import { motion } from "motion/react";
 import TaskCardView, {
   type TaskCardViewProps,
 } from "@/components/dashboard/board/task-card-view";
@@ -17,12 +18,14 @@ export default function DropSlot(props: DropSlotProps) {
   });
 
   return (
-    <div
+    <motion.div
       ref={setNodeRef}
       aria-hidden
+      layout="position"
+      transition={{ layout: { type: "spring", duration: 0.3, bounce: 0 } }}
       className="border-border bg-secondary rounded-2xl border border-dashed"
     >
       <TaskCardView {...props} invisible />
-    </div>
+    </motion.div>
   );
 }

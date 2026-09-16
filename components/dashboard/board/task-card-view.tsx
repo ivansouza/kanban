@@ -45,7 +45,7 @@ export default function TaskCardView({
     <div
       className={cn(
         "group/card shadow-card relative flex w-full flex-col overflow-clip rounded-2xl bg-white",
-        lifted && "shadow-card-lift w-[300px] -rotate-4",
+        lifted && "shadow-card-lift -rotate-4",
         invisible && "invisible",
         className,
       )}
