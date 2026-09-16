@@ -10,12 +10,12 @@ import StatusBadge from "@/components/_common/status-badge";
 import { COLUMN_META } from "@/components/_common/column-meta";
 import TaskCard from "@/components/dashboard/board/task-card";
 import DropSlot from "@/components/dashboard/board/drop-slot";
-import OriginSlot from "@/components/dashboard/board/origin-slot";
 import NewTaskComposer from "@/components/dashboard/board/new-task-composer";
 import type { Placement } from "@/components/dashboard/board/board-drag";
 import { useKanbanStore } from "@/stores/kanban-store";
 import { useUiStore, type Display } from "@/stores/ui-store";
 import type { Column, Member, Task } from "@/lib/kanban";
+import { cn } from "@/lib/utils";
 import PlusIcon from "@/public/assets/images/_common/icons/plus-solid.svg";
 import DotsIcon from "@/public/assets/images/_common/icons/dots-horizontal.svg";
 
@@ -64,14 +64,12 @@ export default function BoardColumn({
   const originIndex = tasks.findIndex((task) => task.id === activeId);
   const inColumn =
     placement !== null && !placement.hidden && placement.columnId === column.id;
-  const originOpen =
-    originIndex >= 0 &&
-    (placement === null ||
-      placement.hidden ||
-      (inColumn && placement.index === originIndex));
   const others = tasks.length - (originIndex >= 0 ? 1 : 0);
-  const slotIndex =
-    inColumn && !originOpen ? Math.min(placement.index, others) : -1;
+  const slotIndex = inColumn
+    ? Math.min(placement.index, others)
+    : originIndex >= 0 && (placement === null || placement.hidden)
+      ? originIndex
+      : -1;
 
   const nodes: ReactNode[] = [];
   let visibleIndex = 0;
@@ -85,19 +83,24 @@ export default function BoardColumn({
       display={display}
     />
   );
-  tasks.forEach((task) => {
+  tasks.forEach((task, index) => {
     if (task.id === activeId) {
       nodes.push(
-        <OriginSlot key={task.id} open={originOpen}>
-          <TaskCard
-            task={task}
-            column={column}
-            members={members}
-            teamName={teamName}
-            display={display}
-            hidden
-          />
-        </OriginSlot>,
+        <div
+          key={task.id}
+          className={cn("relative h-0", index === 0 ? "-mb-3.5" : "-mt-3.5")}
+        >
+          <div className="invisible absolute inset-x-0 top-0">
+            <TaskCard
+              task={task}
+              column={column}
+              members={members}
+              teamName={teamName}
+              display={display}
+              hidden
+            />
+          </div>
+        </div>,
       );
       return;
     }
@@ -110,13 +113,13 @@ export default function BoardColumn({
         members={members}
         teamName={teamName}
         display={display}
-        isFirst={visibleIndex === 0 && originIndex !== 0}
+        isFirst={visibleIndex === 0 && slotIndex !== 0}
         animateLayout={task.id !== settledId}
       />,
     );
     visibleIndex += 1;
   });
-  if (slotIndex >= visibleIndex) nodes.push(slot);
+  if (slotIndex >= visibleIndex && slotIndex >= 0) nodes.push(slot);
 
   const commitRename = () => {
     setRenaming(false);

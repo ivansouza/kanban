@@ -32,6 +32,7 @@ export default function TaskCard({
   } = useDraggable({ id: task.id, data: { type: "task", task } });
   const { setNodeRef: setDropRef } = useDroppable({
     id: `task:${task.id}`,
+    disabled: hidden,
     data: { type: "task", taskId: task.id, columnId: task.columnId },
   });
 
