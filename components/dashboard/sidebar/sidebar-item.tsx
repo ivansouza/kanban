@@ -15,6 +15,9 @@ type SidebarItemProps = {
   className?: string;
 };
 
+export const sidebarFade =
+  "transition-opacity duration-150 ease-power2-out data-[collapsed=true]:opacity-0 data-[collapsed=false]:delay-100";
+
 export default function SidebarItem({
   icon: Icon,
   label,
@@ -33,11 +36,7 @@ export default function SidebarItem({
       aria-current={active ? "page" : undefined}
       title={collapsed ? label : undefined}
       onClick={onClick}
-      className={cn(
-        "group/item w-full justify-start gap-1.5 px-2",
-        collapsed && "justify-center px-0",
-        className,
-      )}
+      className={cn("group/item w-full justify-start gap-1.5 px-2", className)}
     >
       {leading ??
         (Icon && (
@@ -52,14 +51,22 @@ export default function SidebarItem({
           />
         ))}
       <span
+        data-collapsed={collapsed}
         className={cn(
-          "min-w-0 flex-1 truncate px-0.5 text-left",
-          collapsed && "sr-only",
+          "min-w-0 flex-1 overflow-hidden px-0.5 text-left whitespace-nowrap",
+          sidebarFade,
         )}
       >
         {label}
       </span>
-      {!collapsed && trailing}
+      {trailing && (
+        <span
+          data-collapsed={collapsed}
+          className={cn("flex shrink-0 items-center", sidebarFade)}
+        >
+          {trailing}
+        </span>
+      )}
     </Button>
   );
 }

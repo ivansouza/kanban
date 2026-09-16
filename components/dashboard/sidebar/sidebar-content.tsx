@@ -1,6 +1,8 @@
 "use client";
 
-import SidebarItem from "@/components/dashboard/sidebar/sidebar-item";
+import SidebarItem, {
+  sidebarFade,
+} from "@/components/dashboard/sidebar/sidebar-item";
 import SidebarTeam from "@/components/dashboard/sidebar/sidebar-team";
 import Button from "@/components/_ui/button";
 import { useKanbanStore } from "@/stores/kanban-store";
@@ -34,9 +36,10 @@ function SidebarLabel({
 }) {
   return (
     <span
+      data-collapsed={collapsed}
       className={cn(
-        "label-style text-muted-foreground px-2 py-1",
-        collapsed && "sr-only",
+        "label-style text-muted-foreground px-2 py-1 whitespace-nowrap",
+        sidebarFade,
       )}
     >
       {children}
@@ -55,33 +58,38 @@ export default function SidebarContent({
   const toast = useUiStore((state) => state.toast);
   const githubConnected = useKanbanStore((state) => state.githubConnected);
   const toggleGithub = useKanbanStore((state) => state.toggleGithub);
-  const pad = collapsed ? "p-3" : "p-4";
 
   return (
     <div className="flex h-full flex-col">
       <div
         className={cn(
-          "border-border flex items-center gap-2 border-b",
-          pad,
-          collapsed && "flex-col",
+          "border-border ease-smooth-in-out relative shrink-0 border-b transition-[height] duration-200",
+          collapsed ? "h-[100px]" : "h-[62px]",
         )}
       >
-        <div className="flex min-w-0 flex-1 items-center gap-2">
-          <Logo
-            role="img"
-            aria-label="Kanbaaan"
-            className="size-[30px] shrink-0"
-          />
-          <span className={cn("lead-style truncate", collapsed && "sr-only")}>
-            Kanbaaan
-          </span>
-        </div>
+        <Logo
+          role="img"
+          aria-label="Kanbaaan"
+          className="absolute top-4 left-4 size-[30px]"
+        />
+        <span
+          data-collapsed={collapsed}
+          className={cn(
+            "lead-style absolute top-4 left-[54px] flex h-[30px] items-center whitespace-nowrap",
+            sidebarFade,
+          )}
+        >
+          Kanbaaan
+        </span>
         <Button
           variant="secondary"
           size="icon"
           aria-label={toggleLabel}
           onClick={onToggle}
-          className="shadow-ring"
+          className={cn(
+            "shadow-ring ease-smooth-in-out absolute transition-[top,left] duration-200",
+            collapsed ? "top-[54px] left-[15px]" : "top-4 left-[214px]",
+          )}
         >
           <AlignLeftIcon
             aria-hidden
@@ -95,7 +103,7 @@ export default function SidebarContent({
 
       <nav
         aria-label="Personal"
-        className={cn("border-border flex flex-col gap-1 border-b", pad)}
+        className="border-border flex flex-col gap-1 border-b p-4"
       >
         <SidebarItem
           icon={InboxIcon}
@@ -115,11 +123,7 @@ export default function SidebarContent({
 
       <nav
         aria-label="Workspace"
-        className={cn(
-          "border-border flex flex-col gap-6 border-b",
-          pad,
-          collapsed && "gap-3",
-        )}
+        className="border-border flex flex-col gap-6 border-b p-4"
       >
         <div className="flex flex-col gap-1">
           <SidebarLabel collapsed={collapsed}>Workspace</SidebarLabel>
@@ -151,12 +155,7 @@ export default function SidebarContent({
         </div>
       </nav>
 
-      <div
-        className={cn(
-          "scroll-thin flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto",
-          pad,
-        )}
-      >
+      <div className="scroll-thin flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto p-4">
         <SidebarItem
           icon={ShareIcon}
           label="Import issue"
@@ -188,7 +187,7 @@ export default function SidebarContent({
         />
       </div>
 
-      <div className={cn("flex flex-col", pad)}>
+      <div className="flex flex-col p-4">
         <SidebarItem
           icon={ArrowLeftIcon}
           label="Back to agents"
