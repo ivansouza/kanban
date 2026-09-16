@@ -68,6 +68,7 @@ export default function TaskCard({
         ref={setRef}
         {...listeners}
         {...attributes}
+        data-task-card={hidden ? undefined : task.id}
         aria-label={`Open ${task.title}`}
         onClick={open}
         onKeyDown={onKeyDown}

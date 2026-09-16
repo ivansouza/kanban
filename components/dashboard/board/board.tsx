@@ -13,7 +13,7 @@ import {
   useSensors,
   type CollisionDetection,
   type DragEndEvent,
-  type DragOverEvent,
+  type DragMoveEvent,
   type DragStartEvent,
 } from "@dnd-kit/core";
 import { AnimatePresence, motion } from "motion/react";
@@ -126,66 +126,70 @@ export default function Board({ mine = false }: { mine?: boolean }) {
     updatePlacement(null);
   };
 
-  const onDragOver = ({ active, over }: DragOverEvent) => {
+  const pointerFrom = (event: DragMoveEvent) => {
+    const activator = event.activatorEvent as MouseEvent | TouchEvent | null;
+    const touch =
+      activator && "touches" in activator
+        ? (activator.touches[0] ?? activator.changedTouches[0])
+        : null;
+    const originX = touch
+      ? touch.clientX
+      : ((activator as MouseEvent | null)?.clientX ?? 0);
+    const originY = touch
+      ? touch.clientY
+      : ((activator as MouseEvent | null)?.clientY ?? 0);
+    return { x: originX + event.delta.x, y: originY + event.delta.y };
+  };
+
+  const samePlacement = (a: Placement | null, b: Placement | null) =>
+    a === b ||
+    (a !== null &&
+      b !== null &&
+      a.columnId === b.columnId &&
+      a.index === b.index &&
+      a.hidden === b.hidden);
+
+  const onDragMove = (event: DragMoveEvent) => {
+    const { active, over } = event;
     if (!over) {
-      updatePlacement(null);
+      if (placementRef.current !== null) updatePlacement(null);
       return;
     }
     const data = over.data.current as DropData | undefined;
-    if (!data || data.type === "slot") return;
+    if (!data) return;
     const id = String(active.id);
+    let next: Placement | null;
     if (data.type === "hidden") {
-      updatePlacement({
+      next = {
         columnId: data.columnId,
         index: Number.MAX_SAFE_INTEGER,
         beforeId: null,
         hidden: true,
-      });
-      return;
-    }
-    if (data.type === "tail") {
-      updatePlacement({
-        columnId: data.columnId,
-        index: Number.MAX_SAFE_INTEGER,
-        beforeId: null,
+      };
+    } else {
+      const columnId =
+        data.type === "slot" ? placementRef.current?.columnId : data.columnId;
+      if (!columnId) return;
+      const pointer = pointerFrom(event);
+      const cards = Array.from(
+        document.querySelectorAll<HTMLElement>(
+          `[data-column-id="${columnId}"] [data-task-card]`,
+        ),
+      ).filter((card) => card.dataset.taskCard !== id);
+      let index = 0;
+      for (const card of cards) {
+        const rect = card.getBoundingClientRect();
+        if (pointer.y > rect.top + rect.height / 2) index += 1;
+        else break;
+      }
+      next = {
+        columnId,
+        index,
+        beforeId: cards[index]?.dataset.taskCard ?? null,
         hidden: false,
-      });
-      return;
+      };
     }
-    if (data.type === "column") {
-      const current = placementRef.current;
-      if (current && !current.hidden && current.columnId === data.columnId)
-        return;
-      updatePlacement({
-        columnId: data.columnId,
-        index: Number.MAX_SAFE_INTEGER,
-        beforeId: null,
-        hidden: false,
-      });
-      return;
-    }
-    if (data.taskId === id) {
-      updatePlacement(null);
-      return;
-    }
-    const others = (tasksByColumn[data.columnId] ?? []).filter(
-      (task) => task.id !== id,
-    );
-    const index = others.findIndex((task) => task.id === data.taskId);
-    if (index < 0) return;
-    const overRect = over.rect;
-    const translated = active.rect.current.translated;
-    const midY = translated
-      ? translated.top + translated.height / 2
-      : overRect.top;
-    const below = midY > overRect.top + overRect.height / 2;
-    const insertIndex = below ? index + 1 : index;
-    updatePlacement({
-      columnId: data.columnId,
-      index: insertIndex,
-      beforeId: others[insertIndex]?.id ?? null,
-      hidden: false,
-    });
+    if (!samePlacement(placementRef.current, next)) updatePlacement(next);
   };
 
   const finish = () => {
@@ -217,7 +221,7 @@ export default function Board({ mine = false }: { mine?: boolean }) {
       sensors={sensors}
       collisionDetection={collisionDetection}
       onDragStart={onDragStart}
-      onDragOver={onDragOver}
+      onDragMove={onDragMove}
       onDragEnd={onDragEnd}
       onDragCancel={finish}
       accessibility={{

@@ -135,6 +135,7 @@ export default function BoardColumn({
     <motion.section
       layoutScroll
       ref={setColumnRef}
+      data-column-id={column.id}
       aria-label={column.name}
       className="scroll-thin border-border flex h-full w-[85vw] max-w-[340px] shrink-0 snap-start flex-col overflow-y-auto overscroll-y-contain border-r sm:w-[320px] lg:w-auto lg:max-w-none lg:min-w-[280px] lg:flex-1"
     >
