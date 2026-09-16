@@ -3,8 +3,9 @@
 import { useState } from "react";
 import Button from "@/components/_ui/button";
 import Dialog from "@/components/_ui/dialog";
-import { Field, Input, Select, Textarea } from "@/components/_ui/form";
-import { PRIORITY_COLOR } from "@/components/_common/column-meta";
+import { Field, Input, Textarea } from "@/components/_ui/form";
+import { COLUMN_META, PRIORITY_COLOR } from "@/components/_common/column-meta";
+import StatusBadge from "@/components/_common/status-badge";
 import { useKanbanStore } from "@/stores/kanban-store";
 import { useUiStore } from "@/stores/ui-store";
 import { PRIORITIES, type Priority } from "@/lib/kanban";
@@ -155,6 +156,38 @@ export default function TaskDialog({
             save();
           }}
         >
+          <Field label="Column">
+            <div
+              className="flex flex-wrap gap-2"
+              role="radiogroup"
+              aria-label="Column"
+            >
+              {columns.map((column) => {
+                const meta = COLUMN_META[column.kind];
+                const active = draft.columnId === column.id;
+                return (
+                  <Button
+                    key={column.id}
+                    role="radio"
+                    aria-checked={active}
+                    variant="chip"
+                    size="md"
+                    data-active={active}
+                    title={
+                      column.hidden
+                        ? `${column.name} (hidden column)`
+                        : undefined
+                    }
+                    onClick={() => patch({ columnId: column.id })}
+                    className={cn(column.hidden && !active && "text-subtle")}
+                  >
+                    <StatusBadge icon={meta.icon} tone={meta.tone} />
+                    {column.name}
+                  </Button>
+                );
+              })}
+            </div>
+          </Field>
           <Field label="Title" htmlFor="task-title">
             <Input
               id="task-title"
@@ -172,30 +205,6 @@ export default function TaskDialog({
               placeholder="Add context, links or acceptance criteria"
             />
           </Field>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Status" htmlFor="task-status">
-              <Select
-                id="task-status"
-                value={draft.columnId}
-                onChange={(event) => patch({ columnId: event.target.value })}
-              >
-                {columns.map((column) => (
-                  <option key={column.id} value={column.id}>
-                    {column.name}
-                    {column.hidden ? " (hidden)" : ""}
-                  </option>
-                ))}
-              </Select>
-            </Field>
-            <Field label="Due date" htmlFor="task-due">
-              <Input
-                id="task-due"
-                type="date"
-                value={draft.dueDate}
-                onChange={(event) => patch({ dueDate: event.target.value })}
-              />
-            </Field>
-          </div>
           <Field label="Priority">
             <div
               className="flex flex-wrap gap-2"
@@ -246,6 +255,14 @@ export default function TaskDialog({
                 );
               })}
             </div>
+          </Field>
+          <Field label="Due date" htmlFor="task-due">
+            <Input
+              id="task-due"
+              type="date"
+              value={draft.dueDate}
+              onChange={(event) => patch({ dueDate: event.target.value })}
+            />
           </Field>
         </form>
       )}
