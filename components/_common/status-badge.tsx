@@ -30,7 +30,7 @@ export default function StatusBadge({
     <span
       aria-hidden
       className={cn(
-        "relative inline-flex size-3.5 shrink-0 items-center justify-center rounded-[4px] border-[0.5px] border-white/70 text-white",
+        "relative inline-flex size-3.5 shrink-0 items-center justify-center rounded-[4px] text-white",
         tones[tone],
         className,
       )}
