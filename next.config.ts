@@ -1,9 +1,14 @@
 import type { NextConfig } from "next";
 
+const basePath = process.env.GITHUB_PAGES === "true" ? "/kanban" : "";
+
 const nextConfig: NextConfig = {
-  /* config options here */
+  output: "export",
+  trailingSlash: true,
+  basePath,
+  assetPrefix: basePath || undefined,
   images: {
-    // unoptimized: true,
+    unoptimized: true,
     formats: ["image/avif", "image/webp"],
     qualities: [75, 90],
     remotePatterns: [
