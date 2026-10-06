@@ -1,9 +1,9 @@
 import type { MetadataRoute } from "next";
 import { SITE_ROUTES, absoluteUrl } from "@/lib/seo";
 
-export const revalidate = 3600;
+export const dynamic = "force-static";
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
   return SITE_ROUTES.map((route) => ({
