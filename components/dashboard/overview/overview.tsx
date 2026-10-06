@@ -109,18 +109,18 @@ export default function Overview() {
     <div className="scroll-thin min-h-0 flex-1 overflow-y-auto p-4">
       <div className="mx-auto flex max-w-[960px] flex-col gap-4">
         <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
-          <Tile label="All issues" value={total} />
-          <Tile label="In progress" value={inProgress} tone="text-info" />
-          <Tile label="Done" value={doneCount} tone="text-success" />
+          <Tile label="Todas as tarefas" value={total} />
+          <Tile label="Em andamento" value={inProgress} tone="text-info" />
+          <Tile label="Feito" value={doneCount} tone="text-success" />
           <Tile
-            label="Overdue"
+            label="Atrasadas"
             value={stats.overdue.length}
             tone={stats.overdue.length ? "text-danger" : undefined}
           />
         </div>
         <div className="grid gap-3.5 md:grid-cols-2">
           <section className="shadow-card flex flex-col gap-4 rounded-2xl bg-white p-4">
-            <h2>By status</h2>
+            <h2>Por status</h2>
             <div className="flex flex-col gap-3">
               {stats.byColumn.map(({ column, count }) => {
                 const meta = COLUMN_META[column.kind];
@@ -169,7 +169,7 @@ export default function Overview() {
                 </div>
               ))}
             </div>
-            <h2 className="mt-2">Open issues per member</h2>
+            <h2 className="mt-2">Tarefas abertas por pessoa</h2>
             <div className="flex flex-col gap-3">
               {stats.byMember.map(({ member, count }) => (
                 <div key={member.id} className="flex items-center gap-3">
@@ -196,7 +196,7 @@ export default function Overview() {
             </Button>
           </div>
           {stats.upcoming.length === 0 ? (
-            <p className="text-subtle">No open issues have a due date.</p>
+            <p className="text-subtle">Nenhuma tarefa aberta tem prazo.</p>
           ) : (
             <div className="divide-border flex flex-col divide-y">
               {stats.upcoming.map((task) => {

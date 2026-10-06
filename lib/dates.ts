@@ -1,4 +1,4 @@
-const shortFormat = new Intl.DateTimeFormat("en-US", {
+const shortFormat = new Intl.DateTimeFormat("pt-BR", {
   month: "short",
   day: "numeric",
 });
@@ -43,9 +43,9 @@ export type DueInfo = { label: string; overdue: boolean };
 export function dueInfo(due: string | null, done: boolean): DueInfo | null {
   if (!due) return null;
   const today = todayKey();
-  if (due === today) return { label: "Today", overdue: false };
-  if (due === dayKeyFromNow(1)) return { label: "Tomorrow", overdue: false };
-  if (due < today && !done) return { label: "Overdue", overdue: true };
+  if (due === today) return { label: "Hoje", overdue: false };
+  if (due === dayKeyFromNow(1)) return { label: "Amanhã", overdue: false };
+  if (due < today && !done) return { label: "Atrasado", overdue: true };
   return { label: formatShort(due), overdue: false };
 }
 
@@ -56,11 +56,11 @@ export function isOverdue(due: string | null, done: boolean) {
 export function timeAgo(iso: string) {
   const diff = Date.now() - new Date(iso).getTime();
   const minutes = Math.floor(diff / 60000);
-  if (minutes < 1) return "just now";
-  if (minutes < 60) return `${minutes}m ago`;
+  if (minutes < 1) return "agora";
+  if (minutes < 60) return `há ${minutes} min`;
   const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}h ago`;
+  if (hours < 24) return `há ${hours} h`;
   const days = Math.floor(hours / 24);
-  if (days < 7) return `${days}d ago`;
+  if (days < 7) return `há ${days} d`;
   return formatShort(iso);
 }

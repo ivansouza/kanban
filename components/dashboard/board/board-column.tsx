@@ -186,10 +186,10 @@ export default function BoardColumn({
         align="end"
         label={`${column.name} options`}
         items={[
-          { id: "add", label: "Add issue", onSelect: () => setComposing(true) },
+          { id: "add", label: "Nova tarefa", onSelect: () => setComposing(true) },
           {
             id: "rename",
-            label: "Rename column",
+            label: "Renomear coluna",
             onSelect: () => {
               setDraft(column.name);
               setRenaming(true);
@@ -198,20 +198,20 @@ export default function BoardColumn({
           { id: "sep-1", separator: true },
           {
             id: "sort-priority",
-            label: "Sort by priority",
+            label: "Ordenar por prioridade",
             disabled: tasks.length < 2,
             onSelect: () => sortColumn(column.id, "priority"),
           },
           {
             id: "sort-due",
-            label: "Sort by due date",
+            label: "Ordenar por prazo",
             disabled: tasks.length < 2,
             onSelect: () => sortColumn(column.id, "due"),
           },
           { id: "sep-2", separator: true },
           {
             id: "hide",
-            label: "Hide column",
+            label: "Ocultar coluna",
             onSelect: () => {
               setColumnHidden(column.id, true);
               toast(`${column.name} moved to hidden columns`);
@@ -229,7 +229,7 @@ export default function BoardColumn({
         {nodes}
         {tasks.length === 0 && !composing && slotIndex < 0 && (
           <div className="border-border bg-secondary flex h-[130px] flex-col items-center justify-center gap-2 rounded-2xl border border-dashed">
-            <span className="text-subtle">No issues here yet</span>
+            <span className="text-subtle">Nenhuma tarefa aqui</span>
             <Button
               variant="ghost"
               size="sm"

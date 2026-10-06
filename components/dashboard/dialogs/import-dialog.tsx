@@ -32,12 +32,12 @@ export default function ImportDialog({ open }: { open: boolean }) {
     <Dialog
       open={open}
       onClose={closeDialog}
-      title="Import issues"
-      description="Paste one issue title per line."
+      title="Importar tarefas"
+      description="Cole um título de tarefa por linha."
       footer={
         <>
           <Button variant="secondary" size="md" onClick={closeDialog}>
-            Cancel
+            Cancelar
           </Button>
           <Button
             variant="primary"
@@ -51,19 +51,19 @@ export default function ImportDialog({ open }: { open: boolean }) {
       }
     >
       <div className="flex flex-col gap-4">
-        <Field label="Issues" htmlFor="import-text">
+        <Field label="Tarefas" htmlFor="import-text">
           <Textarea
             id="import-text"
             data-autofocus
             value={text}
             onChange={(event) => setText(event.target.value)}
             placeholder={
-              "Write onboarding checklist\nFix login redirect\nDesign empty states"
+              "Escrever checklist de boas-vindas\nCorrigir redirecionamento do login\nDesenhar estados vazios"
             }
             className="min-h-[140px]"
           />
         </Field>
-        <Field label="Add to column" htmlFor="import-column">
+        <Field label="Adicionar na coluna" htmlFor="import-column">
           <Select
             id="import-column"
             value={columnId}

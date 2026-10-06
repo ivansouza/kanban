@@ -13,7 +13,7 @@ export default function ToolbarDisplay() {
   const setDisplay = useUiStore((state) => state.setDisplay);
 
   const items: MenuItem[] = [
-    { id: "heading", heading: "Show on cards" },
+    { id: "heading", heading: "Mostrar nos cartões" },
     ...DISPLAY_OPTIONS.map<MenuItem>((option) => ({
       id: option.key,
       label: option.label,
@@ -29,7 +29,7 @@ export default function ToolbarDisplay() {
         ref={anchorRef}
         variant="secondary"
         size="icon"
-        aria-label="Display options"
+        aria-label="Opções de exibição"
         aria-expanded={open}
         data-active={open}
         onClick={() => setOpen((value) => !value)}
@@ -42,7 +42,7 @@ export default function ToolbarDisplay() {
         onClose={() => setOpen(false)}
         anchorRef={anchorRef}
         align="end"
-        label="Display options"
+        label="Opções de exibição"
         items={items}
       />
     </>

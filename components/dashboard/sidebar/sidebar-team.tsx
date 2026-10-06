@@ -13,9 +13,9 @@ import LayersIcon from "@/public/assets/images/_common/icons/layers-three-01.svg
 import ChevronRightIcon from "@/public/assets/images/_common/icons/chevron-right.svg";
 
 const children: { id: NavId; label: string; icon: typeof CopyIcon }[] = [
-  { id: "team-issues", label: "Issues", icon: CopyIcon },
-  { id: "team-projects", label: "Projects", icon: CubeIcon },
-  { id: "team-views", label: "Views", icon: LayersIcon },
+  { id: "team-issues", label: "Tarefas", icon: CopyIcon },
+  { id: "team-projects", label: "Projetos", icon: CubeIcon },
+  { id: "team-views", label: "Visões", icon: LayersIcon },
 ];
 
 export default function SidebarTeam({ collapsed }: { collapsed: boolean }) {

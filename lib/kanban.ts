@@ -46,9 +46,9 @@ export type BoardData = {
 export const CURRENT_USER_ID = "mark";
 
 export const PRIORITIES: { value: Priority; label: string }[] = [
-  { value: "urgent", label: "Urgent" },
+  { value: "urgent", label: "Urgente" },
   { value: "normal", label: "Normal" },
-  { value: "low", label: "Low" },
+  { value: "low", label: "Baixa" },
 ];
 
 export const PRIORITY_RANK: Record<Priority, number> = {
@@ -68,7 +68,7 @@ export function memberLabel(task: Task, members: Member[]) {
   const names = task.assigneeIds
     .map((id) => members.find((member) => member.id === id)?.name)
     .filter(Boolean) as string[];
-  if (names.length === 0) return "Unassigned";
+  if (names.length === 0) return "Sem responsável";
   if (names.length === 1) return names[0];
   return `${names[0]} +${names.length - 1}`;
 }
@@ -103,29 +103,29 @@ function task(
 
 export function seedData(): BoardData {
   return {
-    title: "Task Progress & Workflow Dashboard",
+    title: "Painel de tarefas e fluxo",
     favorite: false,
-    teamName: "3 Musketeers",
+    teamName: "Três mosqueteiros",
     githubConnected: false,
     members: [
-      { id: "mark", name: "Mark" },
-      { id: "andrew", name: "Andrew" },
-      { id: "jimmy", name: "Jimmy" },
+      { id: "mark", name: "Marcos" },
+      { id: "andrew", name: "André" },
+      { id: "jimmy", name: "Jaime" },
     ],
     columns: [
-      { id: "todo", name: "To do", kind: "todo", hidden: false },
+      { id: "todo", name: "A fazer", kind: "todo", hidden: false },
       {
         id: "in-progress",
-        name: "In progress",
+        name: "Em andamento",
         kind: "in-progress",
         hidden: false,
       },
-      { id: "done", name: "Done", kind: "done", hidden: false },
+      { id: "done", name: "Feito", kind: "done", hidden: false },
       { id: "backlog", name: "Backlog", kind: "backlog", hidden: true },
-      { id: "canceled", name: "Canceled", kind: "canceled", hidden: true },
+      { id: "canceled", name: "Cancelado", kind: "canceled", hidden: true },
       {
         id: "duplicated",
-        name: "Duplicated",
+        name: "Duplicado",
         kind: "duplicated",
         hidden: true,
       },
@@ -133,17 +133,17 @@ export function seedData(): BoardData {
     tasks: [
       task(
         "t1",
-        "Prepare Q2 product roadmap",
+        "Preparar o roadmap do 2º trimestre",
         "todo",
         "urgent",
         ["mark", "andrew"],
         39,
         19,
-        "Collect input from design, engineering and sales before the planning offsite.",
+        "Juntar o que design, engenharia e vendas pediram antes do planejamento.",
       ),
       task(
         "t2",
-        "Update design system components",
+        "Atualizar os componentes do design system",
         "todo",
         "normal",
         ["andrew"],
@@ -152,7 +152,7 @@ export function seedData(): BoardData {
       ),
       task(
         "t3",
-        "Create alignment summary document",
+        "Escrever o resumo de alinhamento",
         "in-progress",
         "urgent",
         ["andrew", "mark", "jimmy"],
@@ -161,7 +161,7 @@ export function seedData(): BoardData {
       ),
       task(
         "t4",
-        "Review homepage copy for launch",
+        "Revisar o texto da homepage para o lançamento",
         "in-progress",
         "low",
         ["andrew", "mark", "jimmy"],
@@ -170,7 +170,7 @@ export function seedData(): BoardData {
       ),
       task(
         "t5",
-        "Validate accessibility improvements",
+        "Validar as melhorias de acessibilidade",
         "in-progress",
         "normal",
         ["jimmy", "andrew", "mark"],
@@ -179,7 +179,7 @@ export function seedData(): BoardData {
       ),
       task(
         "t6",
-        "Configure analytics dashboard",
+        "Configurar o painel de analytics",
         "in-progress",
         "normal",
         ["mark", "andrew", "jimmy"],
@@ -188,7 +188,7 @@ export function seedData(): BoardData {
       ),
       task(
         "t7",
-        "Define success metrics (KPIs)",
+        "Definir as métricas de sucesso (KPIs)",
         "in-progress",
         "urgent",
         ["andrew", "mark", "jimmy"],
@@ -197,7 +197,7 @@ export function seedData(): BoardData {
       ),
       task(
         "t8",
-        "Ship onboarding email sequence",
+        "Publicar a sequência de e-mails de boas-vindas",
         "done",
         "normal",
         ["andrew"],
@@ -206,7 +206,7 @@ export function seedData(): BoardData {
       ),
       task(
         "t9",
-        "Migrate auth to the new SDK",
+        "Migrar a autenticação para o SDK novo",
         "done",
         "normal",
         ["mark", "andrew", "jimmy"],
@@ -215,7 +215,7 @@ export function seedData(): BoardData {
       ),
       task(
         "t10",
-        "Write release notes for v2.4",
+        "Escrever as notas da versão 2.4",
         "done",
         "normal",
         ["andrew", "jimmy", "mark"],
@@ -224,7 +224,7 @@ export function seedData(): BoardData {
       ),
       task(
         "t11",
-        "Explore AI-assisted issue triage",
+        "Explorar triagem de tarefas com IA",
         "backlog",
         "low",
         ["jimmy"],
@@ -233,7 +233,7 @@ export function seedData(): BoardData {
       ),
       task(
         "t12",
-        "Refresh pricing page illustrations",
+        "Atualizar as ilustrações da página de preços",
         "backlog",
         "low",
         [],
@@ -242,7 +242,7 @@ export function seedData(): BoardData {
       ),
       task(
         "t13",
-        "Build Slack notifications v1",
+        "Montar as notificações do Slack v1",
         "canceled",
         "normal",
         ["mark"],
@@ -253,17 +253,17 @@ export function seedData(): BoardData {
     activity: [
       {
         id: "a1",
-        text: "Andrew moved “Ship onboarding email sequence” to Done",
+        text: "André moveu “Publicar a sequência de e-mails de boas-vindas” para Feito",
         at: isoFromNow(-1),
       },
       {
         id: "a2",
-        text: "Mark created “Prepare Q2 product roadmap”",
+        text: "Marcos criou “Preparar o roadmap do 2º trimestre”",
         at: isoFromNow(-2),
       },
       {
         id: "a3",
-        text: "Jimmy set “Review homepage copy for launch” to Low priority",
+        text: "Jaime marcou “Revisar o texto da homepage para o lançamento” como prioridade baixa",
         at: isoFromNow(-3),
       },
     ],

@@ -69,7 +69,7 @@ function PriorityChip({ task }: { task: Task }) {
         open={open}
         onClose={() => setOpen(false)}
         anchorRef={ref}
-        label="Set priority"
+        label="Definir prioridade"
         items={PRIORITIES.map((item) => ({
           id: item.value,
           label: item.label,
@@ -118,7 +118,7 @@ function AssigneeChip({ task, members }: { task: Task; members: Member[] }) {
         open={open}
         onClose={() => setOpen(false)}
         anchorRef={ref}
-        label="Assign"
+        label="Atribuir"
         items={[
           ...members.map((member) => ({
             id: member.id,
@@ -131,7 +131,7 @@ function AssigneeChip({ task, members }: { task: Task; members: Member[] }) {
           { id: "sep", separator: true as const },
           {
             id: "me",
-            label: assigned ? "Unassign me" : "Assign to me",
+            label: assigned ? "Tirar de mim" : "Atribuir a mim",
             onSelect: () => toggle(CURRENT_USER_ID),
           },
         ]}
@@ -146,9 +146,9 @@ function DueChip({ task, column }: { task: Task; column: Column }) {
   const updateTask = useKanbanStore((state) => state.updateTask);
   const due = dueInfo(task.dueDate, column.kind === "done");
   const quick = [
-    { label: "Today", value: dayKeyFromNow(0) },
-    { label: "Tomorrow", value: dayKeyFromNow(1) },
-    { label: "Next week", value: dayKeyFromNow(7) },
+    { label: "Hoje", value: dayKeyFromNow(0) },
+    { label: "Amanhã", value: dayKeyFromNow(1) },
+    { label: "Semana que vem", value: dayKeyFromNow(7) },
   ];
 
   return (
@@ -157,7 +157,7 @@ function DueChip({ task, column }: { task: Task; column: Column }) {
         ref={ref}
         variant="chip"
         size="md"
-        aria-label={due ? `Due: ${due.label}` : "Set due date"}
+        aria-label={due ? `Prazo: ${due.label}` : "Definir prazo"}
         aria-expanded={open}
         data-active={open}
         onMouseDown={stop}
@@ -171,13 +171,13 @@ function DueChip({ task, column }: { task: Task; column: Column }) {
         {!due?.overdue && (
           <CalendarIcon aria-hidden className="text-subtle size-3.5" />
         )}
-        {due ? due.label : "No date"}
+        {due ? due.label : "Sem data"}
       </Button>
       <Popover
         open={open}
         onClose={() => setOpen(false)}
         anchorRef={ref}
-        label="Set due date"
+        label="Definir prazo"
         className="w-[220px]"
       >
         <div className="flex flex-col">
@@ -209,7 +209,7 @@ function DueChip({ task, column }: { task: Task; column: Column }) {
           <div className="p-1">
             <Input
               type="date"
-              aria-label="Due date"
+              aria-label="Prazo"
               value={task.dueDate ?? ""}
               onChange={(event) =>
                 updateTask(task.id, { dueDate: event.target.value || null })

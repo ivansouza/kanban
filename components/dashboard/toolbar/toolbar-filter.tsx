@@ -26,7 +26,7 @@ export default function ToolbarFilter() {
   const active = isFilterActive(filter);
 
   const items: MenuItem[] = [
-    { id: "h-priority", heading: "Priority" },
+    { id: "h-priority", heading: "Prioridade" },
     ...PRIORITIES.map<MenuItem>((priority) => ({
       id: `p-${priority.value}`,
       label: priority.label,
@@ -38,7 +38,7 @@ export default function ToolbarFilter() {
           priority: filter.priority === priority.value ? null : priority.value,
         }),
     })),
-    { id: "h-assignee", heading: "Assignee" },
+    { id: "h-assignee", heading: "Responsável" },
     ...members.map<MenuItem>((member) => ({
       id: `m-${member.id}`,
       label: member.name,
@@ -50,10 +50,10 @@ export default function ToolbarFilter() {
           assigneeId: filter.assigneeId === member.id ? null : member.id,
         }),
     })),
-    { id: "h-due", heading: "Due date" },
+    { id: "h-due", heading: "Prazo" },
     {
       id: "overdue",
-      label: "Overdue only",
+      label: "Só atrasadas",
       icon: <CalendarIcon />,
       checked: filter.overdue,
       keepOpen: true,
@@ -62,7 +62,7 @@ export default function ToolbarFilter() {
     { id: "sep", separator: true },
     {
       id: "clear",
-      label: "Clear filters",
+      label: "Limpar filtros",
       disabled: !active,
       onSelect: clearFilter,
     },
@@ -74,7 +74,7 @@ export default function ToolbarFilter() {
         ref={anchorRef}
         variant="secondary"
         size="icon"
-        aria-label="Filter issues"
+        aria-label="Filtrar tarefas"
         aria-expanded={open}
         data-active={open || active}
         onClick={() => setOpen((value) => !value)}
@@ -92,7 +92,7 @@ export default function ToolbarFilter() {
         <Sheet
           open={open}
           onClose={() => setOpen(false)}
-          title="Filter and display"
+          title="Filtro e exibição"
           footer={
             <>
               <Button
@@ -102,7 +102,7 @@ export default function ToolbarFilter() {
                 onClick={clearFilter}
                 className="mr-auto"
               >
-                Clear filters
+                Limpar filtros
               </Button>
               <Button
                 variant="primary"
@@ -122,7 +122,7 @@ export default function ToolbarFilter() {
           onClose={() => setOpen(false)}
           anchorRef={anchorRef}
           align="end"
-          label="Filter issues"
+          label="Filtrar tarefas"
           items={items}
           className="w-[220px]"
         />

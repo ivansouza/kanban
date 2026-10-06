@@ -36,7 +36,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-scroll-behavior="smooth">
+    <html lang="pt-BR" data-scroll-behavior="smooth">
       <head>
         <script
           dangerouslySetInnerHTML={{

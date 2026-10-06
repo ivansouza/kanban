@@ -17,15 +17,15 @@ export default function ToolbarSearch() {
         type="search"
         value={search}
         onChange={(event) => setSearch(event.target.value)}
-        placeholder="Search"
-        aria-label="Search issues"
+        placeholder="Buscar"
+        aria-label="Buscar tarefas"
         className="text-foreground placeholder:text-subtle min-w-0 flex-1 bg-transparent text-[14px] font-medium tracking-[-0.02em] outline-none [&::-webkit-search-cancel-button]:hidden"
       />
       {search && (
         <Button
           variant="ghost"
           size="xs"
-          aria-label="Clear search"
+          aria-label="Limpar busca"
           onClick={() => setSearch("")}
           className="-mr-0.5"
         >

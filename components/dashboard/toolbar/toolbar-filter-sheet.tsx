@@ -29,7 +29,7 @@ export default function ToolbarFilterSheet() {
 
   return (
     <div className="flex flex-col gap-5 pt-1">
-      <Group label="Priority">
+      <Group label="Prioridade">
         {PRIORITIES.map((priority) => {
           const active = filter.priority === priority.value;
           return (
@@ -52,7 +52,7 @@ export default function ToolbarFilterSheet() {
           );
         })}
       </Group>
-      <Group label="Assignee">
+      <Group label="Responsável">
         {members.map((member) => {
           const active = filter.assigneeId === member.id;
           return (
@@ -78,7 +78,7 @@ export default function ToolbarFilterSheet() {
           );
         })}
       </Group>
-      <Group label="Due date">
+      <Group label="Prazo">
         <Button
           variant="chip"
           size="lg"
@@ -90,7 +90,7 @@ export default function ToolbarFilterSheet() {
           Overdue only
         </Button>
       </Group>
-      <Group label="Show on cards">
+      <Group label="Mostrar nos cartões">
         {DISPLAY_OPTIONS.map((option) => (
           <Button
             key={option.key}

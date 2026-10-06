@@ -66,7 +66,7 @@ export default function Header() {
       <Button
         variant="secondary"
         size="icon"
-        aria-label="Open menu"
+        aria-label="Abrir menu"
         onClick={() => setSidebarOpen(true)}
         className="lg:hidden"
       >
@@ -104,7 +104,7 @@ export default function Header() {
           <Button
             variant="ghost"
             size="icon"
-            aria-label={favorite ? "Remove from favorites" : "Add to favorites"}
+            aria-label={favorite ? "Tirar dos favoritos" : "Adicionar aos favoritos"}
             aria-pressed={favorite}
             onClick={() => {
               toggleFavorite();
@@ -141,7 +141,7 @@ export default function Header() {
           items={[
             {
               id: "rename",
-              label: "Rename dashboard",
+              label: "Renomear painel",
               icon: <FileIcon />,
               onSelect: startRename,
             },
@@ -153,7 +153,7 @@ export default function Header() {
             },
             {
               id: "favorite",
-              label: favorite ? "Remove from favorites" : "Add to favorites",
+              label: favorite ? "Tirar dos favoritos" : "Adicionar aos favoritos",
               icon: <StarIcon />,
               onSelect: toggleFavorite,
             },

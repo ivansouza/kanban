@@ -23,7 +23,7 @@ export default function Sidebar() {
         <SidebarContent
           collapsed={collapsed}
           onToggle={toggleCollapsed}
-          toggleLabel={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          toggleLabel={collapsed ? "Expandir barra" : "Recolher barra"}
         />
       </aside>
       <AnimatePresence>
@@ -47,7 +47,7 @@ export default function Sidebar() {
               <SidebarContent
                 collapsed={false}
                 onToggle={() => setSidebarOpen(false)}
-                toggleLabel="Close menu"
+                toggleLabel="Fechar menu"
               />
             </motion.aside>
           </div>

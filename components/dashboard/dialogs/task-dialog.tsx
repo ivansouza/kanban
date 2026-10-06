@@ -95,10 +95,10 @@ export default function TaskDialog({
     };
     if (task) {
       updateTask(task.id, payload);
-      toast("Issue updated");
+      toast("Tarefa atualizada");
     } else {
       addTask(payload);
-      toast("Issue created");
+      toast("Tarefa criada");
     }
     closeDialog();
   };
@@ -110,7 +110,7 @@ export default function TaskDialog({
       return;
     }
     deleteTask(task.id);
-    toast("Issue deleted");
+    toast("Tarefa excluída");
     closeDialog();
   };
 
@@ -118,7 +118,7 @@ export default function TaskDialog({
     <Dialog
       open={open}
       onClose={closeDialog}
-      title={editing ? "Edit issue" : "New issue"}
+      title={editing ? "Editar tarefa" : "Nova tarefa"}
       description={task ? `Created ${formatShort(task.createdAt)}` : undefined}
       footer={
         <>
@@ -131,11 +131,11 @@ export default function TaskDialog({
               onBlur={() => setConfirmDelete(false)}
               className="mr-auto"
             >
-              {confirmDelete ? "Confirm delete" : "Delete"}
+              {confirmDelete ? "Confirmar exclusão" : "Excluir"}
             </Button>
           )}
           <Button variant="secondary" size="md" onClick={closeDialog}>
-            Cancel
+            Cancelar
           </Button>
           <Button
             variant="primary"
@@ -143,7 +143,7 @@ export default function TaskDialog({
             onClick={save}
             disabled={!draft?.title.trim()}
           >
-            {editing ? "Save changes" : "Create issue"}
+            {editing ? "Salvar" : "Criar tarefa"}
           </Button>
         </>
       }
@@ -156,11 +156,11 @@ export default function TaskDialog({
             save();
           }}
         >
-          <Field label="Column">
+          <Field label="Coluna">
             <div
               className="flex flex-wrap gap-2"
               role="radiogroup"
-              aria-label="Column"
+              aria-label="Coluna"
             >
               {columns.map((column) => {
                 const meta = COLUMN_META[column.kind];
@@ -188,28 +188,28 @@ export default function TaskDialog({
               })}
             </div>
           </Field>
-          <Field label="Title" htmlFor="task-title">
+          <Field label="Título" htmlFor="task-title">
             <Input
               id="task-title"
               data-autofocus
               value={draft.title}
               onChange={(event) => patch({ title: event.target.value })}
-              placeholder="What needs to be done?"
+              placeholder="O que precisa ser feito?"
             />
           </Field>
-          <Field label="Description" htmlFor="task-description">
+          <Field label="Descrição" htmlFor="task-description">
             <Textarea
               id="task-description"
               value={draft.description}
               onChange={(event) => patch({ description: event.target.value })}
-              placeholder="Add context, links or acceptance criteria"
+              placeholder="Contexto, links ou critérios de aceite"
             />
           </Field>
-          <Field label="Priority">
+          <Field label="Prioridade">
             <div
               className="flex flex-wrap gap-2"
               role="radiogroup"
-              aria-label="Priority"
+              aria-label="Prioridade"
             >
               {PRIORITIES.map((priority) => (
                 <Button
@@ -230,7 +230,7 @@ export default function TaskDialog({
               ))}
             </div>
           </Field>
-          <Field label="Assignees">
+          <Field label="Responsáveis">
             <div className="flex flex-wrap gap-2">
               {members.map((member) => {
                 const active = draft.assigneeIds.includes(member.id);
@@ -256,7 +256,7 @@ export default function TaskDialog({
               })}
             </div>
           </Field>
-          <Field label="Due date" htmlFor="task-due">
+          <Field label="Prazo" htmlFor="task-due">
             <Input
               id="task-due"
               type="date"

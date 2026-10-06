@@ -2,9 +2,9 @@ import Dashboard from "@/components/dashboard/dashboard";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
-  title: "Task Progress & Workflow Dashboard - Kanbaaan",
+  title: "Painel de tarefas e fluxo - Kanbaaan",
   description:
-    "Track issues across To do, In progress and Done with drag and drop, filters and team assignments.",
+    "Acompanhe tarefas em A fazer, Em andamento e Feito, com arrastar e soltar, filtros e responsáveis.",
   path: "/",
 });
 

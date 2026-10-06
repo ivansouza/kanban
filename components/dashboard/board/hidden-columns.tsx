@@ -76,7 +76,7 @@ export default function HiddenColumns({
 
   return (
     <aside
-      aria-label="Hidden columns"
+      aria-label="Colunas ocultas"
       className={cn("flex w-[184px] shrink-0 flex-col gap-5 p-4", className)}
     >
       <header className="flex items-center justify-between gap-2">
@@ -86,7 +86,7 @@ export default function HiddenColumns({
             ref={menuRef}
             variant="ghost"
             size="xs"
-            aria-label="Hidden columns options"
+            aria-label="Opções das colunas ocultas"
             aria-expanded={menuOpen}
             data-active={menuOpen}
             onClick={() => setMenuOpen((value) => !value)}
@@ -97,7 +97,7 @@ export default function HiddenColumns({
             <Button
               variant="ghost"
               size="xs"
-              aria-label="Close panel"
+              aria-label="Fechar painel"
               onClick={onClose}
             >
               <XCloseIcon className="size-3.5" aria-hidden />
@@ -110,15 +110,15 @@ export default function HiddenColumns({
         onClose={() => setMenuOpen(false)}
         anchorRef={menuRef}
         align="end"
-        label="Hidden columns options"
+        label="Opções das colunas ocultas"
         items={[
           {
             id: "show-all",
-            label: "Show all columns",
+            label: "Mostrar todas as colunas",
             disabled: columns.length === 0,
             onSelect: () => {
               showAllColumns();
-              toast("All columns are visible");
+              toast("Todas as colunas estão visíveis");
             },
           },
         ]}

@@ -40,7 +40,7 @@ export default function HeaderNotifications() {
         ref={anchorRef}
         variant="secondary"
         size="icon"
-        aria-label="Notifications"
+        aria-label="Notificações"
         aria-expanded={open}
         data-active={open}
         onClick={toggle}
@@ -59,11 +59,11 @@ export default function HeaderNotifications() {
         onClose={() => setOpen(false)}
         anchorRef={anchorRef}
         align="end"
-        label="Notifications"
+        label="Notificações"
         className="w-[320px] max-w-[calc(100vw-16px)] p-0"
       >
         <div className="border-border border-b px-3 py-2.5">
-          <h3>Notifications</h3>
+          <h3>Notificações</h3>
         </div>
         <div className="scroll-thin max-h-[380px] overflow-y-auto p-1">
           {overdue.length > 0 && (

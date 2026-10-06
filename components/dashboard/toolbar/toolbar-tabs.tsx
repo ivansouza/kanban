@@ -6,9 +6,9 @@ import { useUiStore, type Tab } from "@/stores/ui-store";
 import { cn } from "@/lib/utils";
 
 const tabs: { id: Tab; label: string }[] = [
-  { id: "overview", label: "Overview" },
-  { id: "updates", label: "Update" },
-  { id: "issues", label: "Issues" },
+  { id: "overview", label: "Visão geral" },
+  { id: "updates", label: "Atualizações" },
+  { id: "issues", label: "Tarefas" },
 ];
 
 export default function ToolbarTabs() {
@@ -19,7 +19,7 @@ export default function ToolbarTabs() {
   return (
     <div
       role="tablist"
-      aria-label="Views"
+      aria-label="Visões"
       className="bg-muted flex min-w-0 flex-1 rounded-[10px] sm:flex-none"
     >
       {tabs.map((item) => {

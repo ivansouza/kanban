@@ -35,10 +35,10 @@ export type Display = {
 };
 
 export const DISPLAY_OPTIONS: { key: keyof Display; label: string }[] = [
-  { key: "created", label: "Created date" },
-  { key: "priority", label: "Priority" },
-  { key: "assignees", label: "Assignees" },
-  { key: "due", label: "Due date" },
+  { key: "created", label: "Data de criação" },
+  { key: "priority", label: "Prioridade" },
+  { key: "assignees", label: "Responsáveis" },
+  { key: "due", label: "Prazo" },
 ];
 
 export type Toast = { id: number; title: string };

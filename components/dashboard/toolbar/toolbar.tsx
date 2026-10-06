@@ -27,8 +27,8 @@ export default function Toolbar() {
         <Button
           variant="secondary"
           size="icon"
-          aria-label="New issue"
-          title="New issue (N)"
+          aria-label="Nova tarefa"
+          title="Nova tarefa (N)"
           onClick={() => openDialog({ type: "new-task" })}
         >
           <PlusIcon className="size-3.5" aria-hidden />
@@ -44,8 +44,8 @@ export default function Toolbar() {
             size="icon"
             aria-label={
               panelActive
-                ? "Hide hidden columns panel"
-                : "Show hidden columns panel"
+                ? "Esconder colunas ocultas"
+                : "Mostrar colunas ocultas"
             }
             aria-pressed={panelActive}
             data-active={panelActive}

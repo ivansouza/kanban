@@ -404,7 +404,7 @@ export default function Board({ mine = false }: { mine?: boolean }) {
       accessibility={{
         screenReaderInstructions: {
           draggable:
-            "Press Enter to open the issue. Drag it with a pointer to move it to another column. Hold it at the edge of the board to slide to the next column.",
+            "Enter abre a tarefa. Arraste para mover de coluna. Segure na borda do quadro para ir à próxima coluna.",
         },
       }}
     >
@@ -433,10 +433,9 @@ export default function Board({ mine = false }: { mine?: boolean }) {
           ))}
           {visibleColumns.length === 0 && (
             <div className="flex flex-1 flex-col items-center justify-center gap-3 p-8 text-center">
-              <h2>Every column is hidden</h2>
+              <h2>Todas as colunas estão ocultas</h2>
               <p className="text-muted-foreground max-w-[22em]">
-                Bring a column back from the hidden columns panel to see your
-                issues.
+                Traga uma coluna de volta pelo painel de colunas ocultas para ver as tarefas.
               </p>
             </div>
           )}
@@ -458,9 +457,9 @@ export default function Board({ mine = false }: { mine?: boolean }) {
         {nothingVisible && (
           <div className="pointer-events-none absolute inset-x-0 top-1/2 flex -translate-y-1/2 flex-col items-center gap-3 px-8 text-center">
             <div className="shadow-card pointer-events-auto flex flex-col items-center gap-3 rounded-2xl bg-white p-6">
-              <h2>No issues match</h2>
+              <h2>Nenhuma tarefa encontrada</h2>
               <p className="text-muted-foreground max-w-[22em]">
-                Try a different search or clear the active filters.
+                Tente outra busca ou limpe os filtros.
               </p>
               <Button
                 variant="secondary"
@@ -470,7 +469,7 @@ export default function Board({ mine = false }: { mine?: boolean }) {
                   setSearch("");
                 }}
               >
-                Clear search and filters
+                Limpar busca e filtros
               </Button>
             </div>
           </div>

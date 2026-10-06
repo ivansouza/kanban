@@ -4,27 +4,27 @@ import Dialog from "@/components/_ui/dialog";
 import { useUiStore } from "@/stores/ui-store";
 
 const shortcuts = [
-  { keys: ["/"], label: "Focus search" },
-  { keys: ["N"], label: "New issue" },
-  { keys: ["["], label: "Collapse or expand the sidebar" },
-  { keys: ["?"], label: "Open this help" },
-  { keys: ["Esc"], label: "Close menus and dialogs" },
+  { keys: ["/"], label: "Focar a busca" },
+  { keys: ["N"], label: "Nova tarefa" },
+  { keys: ["["], label: "Recolher ou expandir a barra lateral" },
+  { keys: ["?"], label: "Abrir esta ajuda" },
+  { keys: ["Esc"], label: "Fechar menus e diálogos" },
 ];
 
 const tips = [
-  "Drag a card to reorder it or move it to another column.",
-  "Drop a card on a hidden column to move it off the board.",
-  "Click a priority, assignee or date chip to change it in place.",
+  "Arraste um cartão para reordenar ou mover para outra coluna.",
+  "Solte um cartão numa coluna oculta para tirá-lo do quadro.",
+  "Clique na prioridade, no responsável ou na data para alterar ali mesmo.",
 ];
 
 export default function HelpDialog({ open }: { open: boolean }) {
   const closeDialog = useUiStore((state) => state.closeDialog);
 
   return (
-    <Dialog open={open} onClose={closeDialog} title="Help and resources">
+    <Dialog open={open} onClose={closeDialog} title="Ajuda e recursos">
       <div className="flex flex-col gap-5">
         <section className="flex flex-col gap-3">
-          <h3>Keyboard shortcuts</h3>
+          <h3>Atalhos</h3>
           <div className="divide-border flex flex-col divide-y">
             {shortcuts.map((shortcut) => (
               <div
@@ -47,7 +47,7 @@ export default function HelpDialog({ open }: { open: boolean }) {
           </div>
         </section>
         <section className="flex flex-col gap-3">
-          <h3>Working the board</h3>
+          <h3>Usando o quadro</h3>
           <ul className="flex flex-col gap-2">
             {tips.map((tip) => (
               <li key={tip} className="text-muted-foreground flex gap-2">

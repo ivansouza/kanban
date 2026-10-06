@@ -8,16 +8,16 @@ import DotsIcon from "@/public/assets/images/_common/icons/dots-horizontal.svg";
 
 const views: Partial<Record<NavId, { title: string; icon: typeof CubeIcon }>> =
   {
-    projects: { title: "Projects", icon: CubeIcon },
-    "team-projects": { title: "Projects", icon: CubeIcon },
-    views: { title: "Views", icon: LayersIcon },
-    "team-views": { title: "Views", icon: LayersIcon },
-    more: { title: "More", icon: DotsIcon },
+    projects: { title: "Projetos", icon: CubeIcon },
+    "team-projects": { title: "Projetos", icon: CubeIcon },
+    views: { title: "Visões", icon: LayersIcon },
+    "team-views": { title: "Visões", icon: LayersIcon },
+    more: { title: "Mais", icon: DotsIcon },
   };
 
 export default function EmptyView({ nav }: { nav: NavId }) {
   const setNav = useUiStore((state) => state.setNav);
-  const view = views[nav] ?? { title: "This page", icon: DotsIcon };
+  const view = views[nav] ?? { title: "Esta página", icon: DotsIcon };
   const Icon = view.icon;
 
   return (
@@ -33,7 +33,7 @@ export default function EmptyView({ nav }: { nav: NavId }) {
         </p>
       </div>
       <Button variant="primary" size="md" onClick={() => setNav("team-issues")}>
-        Go to issues
+        Ir para as tarefas
       </Button>
     </div>
   );

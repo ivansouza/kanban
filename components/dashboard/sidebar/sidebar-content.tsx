@@ -102,19 +102,19 @@ export default function SidebarContent({
       </div>
 
       <nav
-        aria-label="Personal"
+        aria-label="Pessoal"
         className="border-border flex flex-col gap-1 border-b p-4"
       >
         <SidebarItem
           icon={InboxIcon}
-          label="Inbox"
+          label="Caixa de entrada"
           collapsed={collapsed}
           active={nav === "inbox"}
           onClick={() => setNav("inbox")}
         />
         <SidebarItem
           icon={GridIcon}
-          label="My issues"
+          label="Minhas tarefas"
           collapsed={collapsed}
           active={nav === "my-issues"}
           onClick={() => setNav("my-issues")}
@@ -122,35 +122,35 @@ export default function SidebarContent({
       </nav>
 
       <nav
-        aria-label="Workspace"
+        aria-label="Espaço"
         className="border-border flex flex-col gap-6 border-b p-4"
       >
         <div className="flex flex-col gap-1">
-          <SidebarLabel collapsed={collapsed}>Workspace</SidebarLabel>
+          <SidebarLabel collapsed={collapsed}>Espaço</SidebarLabel>
           <SidebarItem
             icon={CubeIcon}
-            label="Projects"
+            label="Projetos"
             collapsed={collapsed}
             active={nav === "projects"}
             onClick={() => setNav("projects")}
           />
           <SidebarItem
             icon={LayersIcon}
-            label="Views"
+            label="Visões"
             collapsed={collapsed}
             active={nav === "views"}
             onClick={() => setNav("views")}
           />
           <SidebarItem
             icon={DotsIcon}
-            label="More"
+            label="Mais"
             collapsed={collapsed}
             active={nav === "more"}
             onClick={() => setNav("more")}
           />
         </div>
         <div className="flex flex-col gap-1">
-          <SidebarLabel collapsed={collapsed}>Your teams</SidebarLabel>
+          <SidebarLabel collapsed={collapsed}>Suas equipes</SidebarLabel>
           <SidebarTeam collapsed={collapsed} />
         </div>
       </nav>
@@ -158,23 +158,23 @@ export default function SidebarContent({
       <div className="scroll-thin flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto p-4">
         <SidebarItem
           icon={ShareIcon}
-          label="Import issue"
+          label="Importar tarefa"
           collapsed={collapsed}
           onClick={() => openDialog({ type: "import" })}
         />
         <SidebarItem
           icon={UserPlusIcon}
-          label="Invite people"
+          label="Convidar pessoas"
           collapsed={collapsed}
           onClick={() => openDialog({ type: "invite" })}
         />
         <SidebarItem
           icon={LinkIcon}
-          label={githubConnected ? "GitHub connected" : "Connect Github"}
+          label={githubConnected ? "GitHub conectado" : "Conectar GitHub"}
           collapsed={collapsed}
           onClick={() => {
             toggleGithub();
-            toast(githubConnected ? "GitHub disconnected" : "GitHub connected");
+            toast(githubConnected ? "GitHub desconectado" : "GitHub conectado");
           }}
           trailing={
             githubConnected ? (
@@ -190,14 +190,14 @@ export default function SidebarContent({
       <div className="flex flex-col p-4">
         <SidebarItem
           icon={ArrowLeftIcon}
-          label="Back to agents"
+          label="Voltar aos agentes"
           collapsed={collapsed}
           className="gap-2"
-          onClick={() => toast("Agents aren't part of this demo yet")}
+          onClick={() => toast("Agentes ainda não fazem parte desta demo")}
         />
         <SidebarItem
           icon={HelpIcon}
-          label="Help and resource"
+          label="Ajuda e recursos"
           collapsed={collapsed}
           className="gap-2"
           onClick={() => openDialog({ type: "help" })}

@@ -37,13 +37,13 @@ export default function Inbox() {
       <div className="mx-auto flex max-w-[720px] flex-col gap-4">
         <section className="shadow-card flex flex-col gap-4 rounded-2xl bg-white p-4">
           <div className="flex items-center justify-between gap-2">
-            <h2>Needs attention</h2>
+            <h2>Precisa de atenção</h2>
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setNav("team-issues")}
             >
-              Open board
+              Abrir quadro
             </Button>
           </div>
           {attention.length === 0 ? (
@@ -94,9 +94,9 @@ export default function Inbox() {
           )}
         </section>
         <section className="shadow-card flex flex-col gap-4 rounded-2xl bg-white p-4">
-          <h2>Recent activity</h2>
+          <h2>Atividade recente</h2>
           {activity.length === 0 ? (
-            <p className="text-subtle">Nothing has happened yet.</p>
+            <p className="text-subtle">Nada aconteceu ainda.</p>
           ) : (
             <div className="flex flex-col gap-3">
               {activity.slice(0, 10).map((item) => (

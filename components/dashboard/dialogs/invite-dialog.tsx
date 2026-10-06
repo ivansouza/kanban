@@ -31,12 +31,12 @@ export default function InviteDialog({ open }: { open: boolean }) {
     <Dialog
       open={open}
       onClose={closeDialog}
-      title="Invite people"
+      title="Convidar pessoas"
       description={`Add a teammate to ${teamName}.`}
       footer={
         <>
           <Button variant="secondary" size="md" onClick={closeDialog}>
-            Cancel
+            Cancelar
           </Button>
           <Button
             variant="primary"
@@ -57,9 +57,9 @@ export default function InviteDialog({ open }: { open: boolean }) {
         }}
       >
         <Field
-          label="Name"
+          label="Nome"
           htmlFor="invite-name"
-          hint={exists ? "That person is already on the team." : undefined}
+          hint={exists ? "Essa pessoa já está na equipe." : undefined}
         >
           <Input
             id="invite-name"

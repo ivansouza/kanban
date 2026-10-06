@@ -85,7 +85,7 @@ export const useKanbanStore = create<KanbanState>()(
             members: [...state.members, { id, name: trimmed }],
             activity: withActivity(
               state.activity,
-              `${trimmed} joined ${state.teamName}`,
+              `${trimmed} entrou em ${state.teamName}`,
             ),
           };
         }),
@@ -106,7 +106,7 @@ export const useKanbanStore = create<KanbanState>()(
             tasks: [...state.tasks, task],
             activity: withActivity(
               state.activity,
-              `You created “${task.title}”`,
+              `Você criou “${task.title}”`,
             ),
           };
         });
@@ -131,7 +131,7 @@ export const useKanbanStore = create<KanbanState>()(
           ],
           activity: withActivity(
             state.activity,
-            `You imported ${clean.length} issue${clean.length === 1 ? "" : "s"}`,
+            `Você importou ${clean.length} tarefa${clean.length === 1 ? "" : "s"}`,
           ),
         }));
         return clean.length;
@@ -146,15 +146,15 @@ export const useKanbanStore = create<KanbanState>()(
             const column = state.columns.find((c) => c.id === patch.columnId);
             activity = withActivity(
               activity,
-              `You moved “${next.title}” to ${column?.name ?? "another column"}`,
+              `Você moveu “${next.title}” para ${column?.name ?? "outra coluna"}`,
             );
           } else if (patch.priority && patch.priority !== current.priority) {
             activity = withActivity(
               activity,
-              `You set “${next.title}” to ${patch.priority} priority`,
+              `Você definiu “${next.title}” como prioridade ${patch.priority}`,
             );
           } else {
-            activity = withActivity(activity, `You updated “${next.title}”`);
+            activity = withActivity(activity, `Você atualizou “${next.title}”`);
           }
           const tasks =
             patch.columnId && patch.columnId !== current.columnId
@@ -170,7 +170,7 @@ export const useKanbanStore = create<KanbanState>()(
             tasks: state.tasks.filter((item) => item.id !== id),
             activity: withActivity(
               state.activity,
-              `You deleted “${task.title}”`,
+              `Você excluiu “${task.title}”`,
             ),
           };
         }),
@@ -185,7 +185,7 @@ export const useKanbanStore = create<KanbanState>()(
             tasks,
             activity: withActivity(
               state.activity,
-              `You moved “${task.title}” to ${column?.name ?? columnId}`,
+              `Você moveu “${task.title}” para ${column?.name ?? columnId}`,
             ),
           };
         }),
@@ -232,7 +232,8 @@ export const useKanbanStore = create<KanbanState>()(
     }),
     {
       name: "kanbaaan-board",
-      version: 1,
+            version: 2,
+      migrate: () => seedData(),
       storage: createJSONStorage(() => window.localStorage),
       skipHydration: true,
       partialize: (state) => ({

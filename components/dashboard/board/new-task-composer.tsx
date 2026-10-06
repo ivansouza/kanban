@@ -38,13 +38,13 @@ export default function NewTaskComposer({
         value={title}
         onChange={(event) => setTitle(event.target.value)}
         onKeyDown={onKeyDown}
-        placeholder="Issue title"
-        aria-label="Issue title"
+        placeholder="Título da tarefa"
+        aria-label="Título da tarefa"
         className="h-[30px] px-1 shadow-none focus:shadow-none"
       />
       <div className="flex justify-end gap-1">
         <Button variant="ghost" size="sm" onClick={onClose}>
-          Cancel
+          Cancelar
         </Button>
         <Button
           variant="primary"

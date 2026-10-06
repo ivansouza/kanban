@@ -4,7 +4,7 @@ export const SITE_NAME = "Kanbaaan";
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://example.com";
 export const SITE_DESCRIPTION =
-  "A kanban board for tracking issues across your team, with drag and drop, filters and due dates.";
+  "Quadro kanban para acompanhar tarefas da equipe, com arrastar e soltar, filtros e prazos.";
 export const DEFAULT_OG_IMAGE = "/opengraph-image.jpg";
 
 export function absoluteUrl(path: string) {
@@ -29,7 +29,7 @@ export type SiteRoute = {
 export const SITE_ROUTES: SiteRoute[] = [
   {
     path: "/",
-    title: "Task Progress & Workflow Dashboard",
+    title: "Painel de tarefas e fluxo",
     description: SITE_DESCRIPTION,
     changeFrequency: "weekly",
     priority: 1,

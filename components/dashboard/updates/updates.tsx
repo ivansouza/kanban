@@ -11,7 +11,7 @@ export default function Updates() {
       <div className="mx-auto flex max-w-[720px] flex-col gap-4">
         <section className="shadow-card flex flex-col gap-4 rounded-2xl bg-white p-4">
           <div className="flex items-center justify-between">
-            <h2>Activity</h2>
+            <h2>Atividade</h2>
             <span className="text-subtle">{activity.length} updates</span>
           </div>
           {activity.length === 0 ? (
