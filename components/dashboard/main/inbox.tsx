@@ -47,7 +47,7 @@ export default function Inbox() {
             </Button>
           </div>
           {attention.length === 0 ? (
-            <p className="text-subtle">You&apos;re all caught up.</p>
+            <p className="text-subtle">Tudo em dia.</p>
           ) : (
             <div className="divide-border flex flex-col divide-y">
               {attention.map((task) => {
